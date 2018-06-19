@@ -32,4 +32,4 @@ TMDBID_API="" # themoviedb API Key
 - Call script from Home Assistant (see folder example)
 
 # Bonus
-- Create an IFTTT applet for cancelling last movie added to radarr by this script. (see folder example)
+- Create an IFTTT applet for removing last movie added to radarr by this script in case of a mistake. (see folder example)
