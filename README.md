@@ -36,7 +36,7 @@ python3 ./hass_radarr_search_by_voice.py "star wars" "0"
 It should let you know if it found and added a movie.
 
 # Integrate with Home Assistant
-1. Copy the content of the _example/homeassistant_ folder to your homeassistant folder. If you already have a custom yalm file for your own scripts and shell commands then just add the content of each files (_scripts.yaml_ and _shellcommand.yaml_) to your own files.
+1. Copy the content of the _example/homeassistant_ folder to your homeassistant folder. If you already have a custom yaml file for your own scripts and shell commands then just add the content of each files (_scripts.yaml_ and _shellcommand.yaml_) to your own files.
 2. Let homeassistant know where your scripts and shell commands will be by adding the following lines to your _configuration.yaml_ (in case you are using the same file structure as me).
 ```script: !include scripts.yaml```
 ```shell_command: !include shellcommand.yaml```
@@ -48,7 +48,7 @@ It should let you know if it found and added a movie.
 ### Example folder Files overview:
 
 **homeassistant folder**.
-This is your homeassistant folder where the configuration yalm files are.
+This is your homeassistant folder where the configuration yaml files are.
 
 **homeassistant/scripts.yaml**.  
 A separate configuration file for your own scripts  instead of including everything in _configuration.yaml_. It’s required to add the line `script: !include scripts.yaml` in the _configuration.yaml_ file to let know homeassistant about the separation.
