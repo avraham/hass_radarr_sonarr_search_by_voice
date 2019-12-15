@@ -63,5 +63,4 @@ Shell script for homeassistant that will call the python script.
 Bonus shell script for removing the last movie added to radarr by this script.
 
 # How to use it with IFTTT
-- Create an IFTTT applet for each mode (optional) (see folder example)
-- Call script from Home Assistant (see folder example)
+- Create an IFTTT applet for each mode [Example provided by sinker1345](https://github.com/avraham/hass_radarr_search_by_voice/issues/3#issuecomment-552521505)
