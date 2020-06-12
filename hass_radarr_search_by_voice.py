@@ -90,7 +90,7 @@ class MovieDownloader:
                             data = self.prepare_movie_json(media_list[i])
                             movies.append(data)
                             i += 1
-                        msg = save_options_found_and_compose_msg(movies)
+                        msg = self.save_options_found_and_compose_msg(movies)
                         self.tts_google(msg)
 
 
@@ -267,10 +267,10 @@ class MovieDownloader:
             headers = {
                 'Authorization': 'Bearer '+HASS_TOKEN
             }
-            r = requests.post("http://"+HASS_SERVER+"/api/services/tts/google_say",json.dumps(data), headers=headers)
+            r = requests.post(HASS_SERVER+"/api/services/tts/google_translate_say",json.dumps(data), headers=headers)
 
         else:
-            r = requests.post("http://"+HASS_SERVER+"/api/services/tts/google_say?api_password="+HASS_API,json.dumps(data))
+            r = requests.post(HASS_SERVER+"/api/services/tts/google__translate_say?api_password="+HASS_API,json.dumps(data))
 
 
         # assistant-relay
