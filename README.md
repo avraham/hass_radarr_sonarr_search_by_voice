@@ -62,5 +62,7 @@ Shell script for homeassistant that will call the python script.
 **homeassistant/scripts/remove_download.sh**
 Bonus shell script for removing the last movie added to radarr by this script.
 
-# How to use it with IFTTT
-- Create an IFTTT applet for each mode [Example provided by sinker1345](https://github.com/avraham/hass_radarr_search_by_voice/issues/3#issuecomment-552521505)
+# Use it by voice with Google Assistant and IFTTT
+- Setup IFTTT integration on Home Assistant. Go to Configuration > integrations > IFTTT. It will give you a private IFTTT_WEEBHOOK_ID, save it somewhere.
+- Create an IFTTT applet for each mode. You can see an example in the repository at the folder example/ifttt
+- Set a new automation for the ifttt webhook so it can call your script. [Example provided by sinker1345](https://github.com/avraham/hass_radarr_search_by_voice/issues/3#issuecomment-552521505)
