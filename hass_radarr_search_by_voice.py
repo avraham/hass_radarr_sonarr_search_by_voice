@@ -267,10 +267,10 @@ class MovieDownloader:
             headers = {
                 'Authorization': 'Bearer '+HASS_TOKEN
             }
-            r = requests.post(HASS_SERVER+"/api/services/tts/google_translate_say",json.dumps(data), headers=headers)
+            r = requests.post("http://"+HASS_SERVER+"/api/services/tts/google_translate_say",json.dumps(data), headers=headers)
 
         else:
-            r = requests.post(HASS_SERVER+"/api/services/tts/google__translate_say?api_password="+HASS_API,json.dumps(data))
+            r = requests.post("http://"+HASS_SERVER+"/api/services/tts/google__translate_say?api_password="+HASS_API,json.dumps(data))
 
 
         # assistant-relay
