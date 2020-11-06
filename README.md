@@ -33,18 +33,25 @@ TMDBID_API="" # themoviedb API Key
 
 # How to test from command line
 Go to the path of the script, make sure the give executable permissions and run:
-python3 ./hass_radarr_search_by_voice.py "star wars" "0"
-It should let you know if it found and added a movie.
+```python3 ./hass_radarr_search_by_voice.py "Artemis Fowl" "0"```
+
+It should let you know if it found and added a movie (The Google Home Speaker, should speak back).
 
 # Integrate with Home Assistant
 1. Copy the content of the _example/homeassistant_ folder to your homeassistant folder. If you already have a custom yaml file for your own scripts and shell commands then just add the content of each files (_scripts.yaml_ and _shellcommand.yaml_) to your own files.
-2. Let homeassistant know where your scripts and shell commands will be by adding the following lines to your _configuration.yaml_ (in case you are using the same file structure as me).
+
+2º Let homeassistant know where your scripts and shell commands will be by adding the following lines to your _configuration.yaml_ (in case you are using the same file structure as me).
+
 ```script: !include scripts.yaml```
 ```shell_command: !include shellcommand.yaml```
-3. In your _homeassistant/scripts/download.sh_.  file replace ‘/path/to/hass_radarr_search_by_voice.py’ with the actual path where you saved the python file.
-4. Fill up the User defined variables in your _hass_radarr_search_by_voice.py_
-5. Make sure the give executable permissions to everything inside _homeassistant/scripts_ folder and to _hass_radarr_search_by_voice.py_ file.
-6. Bonus. Fill up the User defined variables in _homeassistant/scripts/remove_download.sh_
+
+3º In your _homeassistant/scripts/download.sh_.  file replace ‘/path/to/hass_radarr_search_by_voice.py’ with the actual path where you saved the python file.
+
+4º Fill up the User defined variables in your _hass_radarr_search_by_voice.py_
+
+5º Make sure the give executable permissions to everything inside _homeassistant/scripts_ folder and to _hass_radarr_search_by_voice.py_ file.
+
+6º Bonus. Fill up the User defined variables in _homeassistant/scripts/remove_download.sh_
 
 ### Example folder Files overview:
 
