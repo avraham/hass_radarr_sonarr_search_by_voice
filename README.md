@@ -66,7 +66,7 @@ Bonus shell script for removing the last movie added to radarr by this script.
 # Use it by voice with Google Assistant and IFTTT
  0º - Setup IFTTT integration on Home Assistant. Go to Configuration > integrations > IFTTT. It will give you a private IFTTT_WEEBHOOK_ID, save it somewhere this is important.
  
- 1º - Go to ifttt.com
+ 1º - Go to https://ifttt.com
  
  2º - create a new applet
  
