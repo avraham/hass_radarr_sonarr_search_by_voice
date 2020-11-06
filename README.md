@@ -20,6 +20,67 @@ Add movies to radarr by asking Google Home to do it.
 
 - Mode 3 (search by actor/actress). Search recent movies with an specific actor/actress and it will offers up to 5 options to choose from.
 
+## Install Home Assistant (Home Assistant Supervised ) using Docker.
+  1º - Download the installer.sh from HA(Home Assistant) repository.
+      Command:
+```
+curl -Lo installer.sh https://raw.githubusercontent.com/home-assistant/supervised-installer/master/installer.sh
+```
+
+   2º - Than execute (You need to change the MACHINE_TYPE with the correct machine type listed bellow)
+      Command:
+```
+bash installer.sh --machine MACHINE_TYPE
+```
+
+### Supported Machine types
+
+- intel-nuc
+- odroid-c2
+- odroid-n2
+- odroid-xu
+- qemuarm
+- qemuarm-64
+- qemux86
+- qemux86-64
+- raspberrypi
+- raspberrypi2
+- raspberrypi3
+- raspberrypi4
+- raspberrypi3-64
+- raspberrypi4-64
+- tinker
+
+After sometime you should be able to go to http://ip_of_server:8123/ it can take some time on the first start, so be pacient.
+
+## Git Clone this script
+install git
+
+```
+apt-get install -y git
+```
+
+Now it's time to clone the repo to you folder 
+
+```
+git clone THIS_REPOSITORY 
+```
+
+go to your cloned folder 
+
+```
+cd hass_radarr_search_by_voice
+```
+
+copy `hass_radarr_search_by_voice.py` and `hass_radarr_search_by_voice/example/homeassistant/`
+
+```
+cp hass_radarr_search_by_voice.py /usr/share/hassio/homeassistant/
+cd /example/homeassistant_docker/
+cp -r * /usr/share/hassio/homeassistant/
+```
+*Note the destination path is only for the Home Assistant Supervided installation.* 
+
 # A) How to setup
 - Set your own values to the configuration variables in hass_radarr_search_by_voice.py
 
