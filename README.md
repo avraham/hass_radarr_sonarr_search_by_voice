@@ -16,7 +16,7 @@ Add movies to radarr by asking Google Home to do it.
 - Mode 2. Tell it a number to download from previous options given by search.
 - Mode 3 (search by actor/actress). Search recent movies with an specific actor/actress and it will offers up to 5 options to choose from.
 
-# How to setup
+# A) How to setup
 - Set your own values to the configuration variables in hass_radarr_search_by_voice.py
 ```
 HASS_SERVER="" # Home assistant URL eg. localhost:8123 with port
@@ -31,14 +31,14 @@ RADARR_QUALITY_PROFILE_ID=4  # 1080p
 TMDBID_API="" # themoviedb API Key
 ```
 
-# How to test from command line
+# B) How to test from command line
 Go to the path of the script, make sure the give executable permissions and run:
 ```python3 ./hass_radarr_search_by_voice.py "Artemis Fowl" "0"```
 
 It should let you know if it found and added a movie (The Google Home Speaker, should speak back).
 
-# Integrate with Home Assistant
-1. Copy the content of the _example/homeassistant_ folder to your homeassistant folder. If you already have a custom yaml file for your own scripts and shell commands then just add the content of each files (_scripts.yaml_ and _shellcommand.yaml_) to your own files.
+# C) Integrate with Home Assistant
+1º Copy the content of the _example/homeassistant_ folder to your homeassistant folder. If you already have a custom yaml file for your own scripts and shell commands then just add the content of each files (_scripts.yaml_ and _shellcommand.yaml_) to your own files.
 
 2º Let homeassistant know where your scripts and shell commands will be by adding the following lines to your _configuration.yaml_ (in case you are using the same file structure as me).
 
@@ -70,7 +70,7 @@ Shell script for homeassistant that will call the python script.
 **homeassistant/scripts/remove_download.sh**
 Bonus shell script for removing the last movie added to radarr by this script.
 
-# Use it by voice with Google Assistant and IFTTT
+# D) Use it by voice with Google Assistant and IFTTT
  0º - Setup IFTTT integration on Home Assistant. Go to Configuration > integrations > IFTTT. It will give you a private IFTTT_WEEBHOOK_ID, save it somewhere this is important.
  
  1º - Go to https://ifttt.com
@@ -93,7 +93,7 @@ Bonus shell script for removing the last movie added to radarr by this script.
 
 8º - Enter the following:
     
-    URL: the url you copied before 1º 
+    URL: the url you copied before 1.D)
     Method: Post
     Content Type: application/json
     body: { "action": "call_service", "service": "script.download_movie", "movie": "{{TextField}}"} 
