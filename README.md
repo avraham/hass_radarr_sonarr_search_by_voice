@@ -7,6 +7,7 @@ Add movies to radarr by voice with Home Assistant and Google Home.
 - Radarr
 - Google Home
 - https://www.themoviedb.org API Key
+- IFTTT Account
 
 # Features
 Add movies to radarr by asking Google Home to do it.
@@ -63,6 +64,22 @@ Shell script for homeassistant that will call the python script.
 Bonus shell script for removing the last movie added to radarr by this script.
 
 # Use it by voice with Google Assistant and IFTTT
-- Setup IFTTT integration on Home Assistant. Go to Configuration > integrations > IFTTT. It will give you a private IFTTT_WEEBHOOK_ID, save it somewhere.
-- Create an IFTTT applet for each mode. You can see an example in the repository at the folder example/ifttt
-- Set a new automation for the ifttt webhook so it can call your script.  see folder example
+ 0º - Setup IFTTT integration on Home Assistant. Go to Configuration > integrations > IFTTT. It will give you a private IFTTT_WEEBHOOK_ID, save it somewhere this is important.
+ 1º - Go to ifttt.com
+ 2º - create a new applet
+ 3º - click on (if this) -> Google Assistant -> Say a phrase with a text ingredient
+ 4º - What do you want to say? Enter: Download the movie $
+      *Note the $(Dollar symbol ) is very important.THIS IS A EXEMPLE OF WHAT YOU MAY SAY TO DOWNLOAD THE MOVIE $*
+ 5º - What do you want the Assistant to say in response? Enter: Searching the movie $
+      *Note the $(Dollar symbol ) is very important.THIS IS A EXEMPLE OF WHAT YOU MAY SAY TO DOWNLOAD THE MOVIE $*
+ 6º - Save!!
+ 7º - Click on (Then That) --> webhoock
+ 8º - Enter the following:
+    
+    URL: the url you copied before 1º 
+    Method: Post
+    Content Type: application/json
+    body: { "action": "call_service", "service": "script.download_movie", "movie": "{{TextField}}"} 
+    
+    *NOTE the text (TextField should be surrounded by grey spaces)
+ 9º - Save!!
