@@ -74,7 +74,7 @@ It should let you know if it found and added a movie (The Google Home Speaker, s
 
 5º - What do you want the Assistant to say in response? Enter: Searching the movie $
      
-   *Note the $(Dollar symbol ) is very important.THIS IS A EXEMPLE OF WHAT YOU MAY SAY TO DOWNLOAD THE MOVIE $*
+   *Note the $(Dollar symbol ) is very important.THIS IS A EXEMPLE OF WHAT AFTER YOUR REQUEST $*
  
  6º - Save!!
  
