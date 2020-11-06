@@ -33,7 +33,7 @@ curl -Lo installer.sh https://raw.githubusercontent.com/home-assistant/supervise
 bash installer.sh --machine MACHINE_TYPE
 ```
 
-### Supported Machine types
+#### Supported Machine types
 
 - intel-nuc
 - odroid-c2
@@ -53,7 +53,7 @@ bash installer.sh --machine MACHINE_TYPE
 
 After sometime you should be able to go to http://ip_of_server:8123/ it can take some time on the first start, so be pacient.
 
-## Git Clone this script
+#### Git Clone this script
 install git
 
 ```
