@@ -52,8 +52,9 @@ class MovieDownloader:
         year = datetime.datetime.now().year
         term = movie
         search_term = term.replace(" ", "%20")
-        current_years = [ year-1, year, year+1, year+2]
-
+        current_years = [year, year+1, year+2]
+        for i  in range(1,49):
+         current_years .append(year-i)
 
         if mode == 0 or mode == 1: # we are making a search by movie title
             # search
