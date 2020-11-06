@@ -109,6 +109,8 @@ TMDBID_API="" # themoviedb API Key
 ```
 *Note to get HASS_TOKEN go to your home assistant (http://ip_of_server:8123/) then go to Your Profile (last option on the button at the left tab) then go to  Long-Lived Access Tokens at the end of the page.*
 
+*Note to get the HASS_GOOGLE_HOME_ENTITY go to your home assistant (http://ip_of_server:8123/) then go to Your Configuration tab -> Entities , there is all entity ID of the devices in your home.*
+
 # B) How to test from command line
 Go to the path of the script, make sure the give executable permissions and run:
 ```python3 ./hass_radarr_search_by_voice.py "Artemis Fowl" "0"```
