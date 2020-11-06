@@ -1,0 +1,25 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+    cache: true
+    cache_dir: /tmp/tts
+    time_memory: 300
+    language: 'fr'
+
+logger:
+  default: notset
+
+http:
+  cors_allowed_origins:
+    - https://hooks.nabu.casa
+
+shell_command: !include shellcommand.yaml
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
