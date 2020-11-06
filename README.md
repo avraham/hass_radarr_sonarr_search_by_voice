@@ -82,7 +82,7 @@ It should let you know if it found and added a movie (The Google Home Speaker, s
 
 8º - Enter the following:
     
-    URL: the url you copied before 1.D)
+    URL: the url you copied before at 0.D)
     Method: Post
     Content Type: application/json
     body: { "action": "call_service", "service": "script.download_movie", "movie": "{{TextField}}"} 
