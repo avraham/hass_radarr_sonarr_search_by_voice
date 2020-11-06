@@ -72,14 +72,25 @@ go to your cloned folder
 cd hass_radarr_search_by_voice
 ```
 
-copy `hass_radarr_search_by_voice.py` and `hass_radarr_search_by_voice/example/homeassistant/`
+copy `hass_radarr_search_by_voice.py` and `hass_radarr_search_by_voice/example/homeassistant_docker/` to the `/usr/share/hassio/homeassistant/`
 
 ```
 cp hass_radarr_search_by_voice.py /usr/share/hassio/homeassistant/
 cd /example/homeassistant_docker/
 cp -r * /usr/share/hassio/homeassistant/
 ```
-*Note the destination path is only for the Home Assistant Supervided installation.* 
+*Note the destination path is only for the Home Assistant Supervised installation (Method Above using docker).* 
+
+#### Only for (The above installation method)
+
+ Edit the shellcommand.yaml file where --> server_ip <-- your node server ip
+
+```
+download_movie: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{movie}}" 0'
+search_movie: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{movie}}" 1'
+download_option: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{option}}" 2'
+```
+
 
 # A) How to setup
 - Set your own values to the configuration variables in hass_radarr_search_by_voice.py
@@ -113,7 +124,8 @@ It should let you know if it found and added a movie (The Google Home Speaker, s
 ```shell_command: !include shellcommand.yaml```
 
 3º In your _homeassistant/scripts/download.sh_.  file replace ‘/path/to/hass_radarr_search_by_voice.py’ with the actual path where you saved the python file.
-
+  *IMPORTANT NOTE: If you follow the installation method you don't need to edit the path because it point to `/usr/share/hassio/homeassistant/hass_radarr_search_by_voice.py`*
+  
 4º Fill up the User defined variables in your _hass_radarr_search_by_voice.py_
 
 5º Make sure the give executable permissions to everything inside _homeassistant/scripts_ folder and to _hass_radarr_search_by_voice.py_ file.
