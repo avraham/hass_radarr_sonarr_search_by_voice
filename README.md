@@ -96,7 +96,7 @@ RADARR_DOWNLOAD_PATH="" # aka rootFolderPath
 RADARR_QUALITY_PROFILE_ID=4  # 1080p
 TMDBID_API="" # themoviedb API Key
 ```
-*Note to get HASS_TOKEN go to your home assistant (http:ip_of_server:8123/) then go to Your Profile (last option on the button at the left tab) then go to  Long-Lived Access Tokens at the end of the page.*
+*Note to get HASS_TOKEN go to your home assistant (http://ip_of_server:8123/) then go to Your Profile (last option on the button at the left tab) then go to  Long-Lived Access Tokens at the end of the page.*
 
 # B) How to test from command line
 Go to the path of the script, make sure the give executable permissions and run:
