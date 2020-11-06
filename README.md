@@ -158,9 +158,16 @@ It should let you know if it found and added a movie (The Google Home Speaker, s
     URL: the url you copied before at 0.D)
     Method: Post
     Content Type: application/json
-    body: { "action": "call_service", "service": "script.download_movie", "movie": "{{TextField}}"} 
+    body: { "action": "call_service", "service": "script.download_movie", "data": "{{TextField}}"} 
     
-    *NOTE the text (TextField should be surrounded by grey spaces)
+    *IMPOTANT NOTE the text ("TextField" should be surrounded by grey spaces) , 
+    
+   !IF YOU USE THE INSTALLATION METHOD ABOVE USE THE FOLLOWING!
+   
+    URL: the url you copied before at 0.D)
+    Method: Post
+    Content Type: application/json
+    body: { "action": "call_service", "service": "script.download_movie", "movie": "{{TextField}}"} 
  
  9º - Save!!
 
