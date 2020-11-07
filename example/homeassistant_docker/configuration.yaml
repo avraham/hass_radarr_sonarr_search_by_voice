@@ -9,14 +9,10 @@ tts:
     cache: true
     cache_dir: /tmp/tts
     time_memory: 300
-    language: 'fr'
+    language: 'en'
 
 logger:
   default: notset
-
-http:
-  cors_allowed_origins:
-    - https://hooks.nabu.casa
 
 shell_command: !include shellcommand.yaml
 group: !include groups.yaml
