@@ -74,7 +74,7 @@ cd hass_radarr_search_by_voice
 
 copy `hass_radarr_search_by_voice.py` and `hass_radarr_search_by_voice/example/homeassistant_docker/` to the `/usr/share/hassio/homeassistant/`
 
-!! WARNING: if you have allready a `configuration.yaml` please backup it First because the the next step will replace it / after that you need to import in the file, (configuration.yaml) you backed up to the new once have been copied. IF YOUR INSTALLATION IS A FRESH INSTALL JUST IGNORE THIS WARNING !
+!! WARNING: if you have allready a `configuration.yaml` please backup it First because the the next step will replace it / after that you need to import your configs manually (Copy and paste with nano/vim or any text editor) from your backup file, (configuration.yaml) to the new once have been copied. IF YOUR INSTALLATION IS A FRESH INSTALL JUST IGNORE THIS WARNING !
 
 ```
 cp hass_radarr_search_by_voice.py /usr/share/hassio/homeassistant/
