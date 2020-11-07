@@ -1,0 +1,18 @@
+download_movie:
+  alias: download_movie
+  sequence:
+  - service: shell_command.download_movie
+    data_template:
+      movie: '{{ movie }}'
+search_movie:
+  alias: search_movie
+  sequence:
+  - service: shell_command.search_movie
+    data_template:
+      movie: '{{ movie }}'
+download_option:
+  alias: download_option
+  sequence:
+  - service: shell_command.download_option
+    data_template:
+      option: '{{ option }}'
