@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Home assistant scripts path eg. /users/vr/.homeassistant/scripts
+# Home assistant scripts path eg. /users/vr/.homeassistant/scripts or for container /config/scripts
 HASS_SCRIPTS_PATH=""
 RADARR_SERVER="" # with port
 RADARR_API=""
