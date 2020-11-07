@@ -74,46 +74,16 @@ cd hass_radarr_search_by_voice
 
 copy `hass_radarr_search_by_voice.py` and `hass_radarr_search_by_voice/example/homeassistant_docker/` to the `/usr/share/hassio/homeassistant/`
 
+!! WARNING: if you have allready a `configuration.yaml` please backup it First because the the next step will replace it / after that you need to import in the file, (configuration.yaml) you backed up to the new once have been copied. IF YOUR INSTALLATION IS A FRESH INSTALL JUST IGNORE THIS WARNING !
+
 ```
 cp hass_radarr_search_by_voice.py /usr/share/hassio/homeassistant/
 cd /example/homeassistant_docker/
 cp -r * /usr/share/hassio/homeassistant/
 ```
-*Note the destination path is only for the Home Assistant Supervised installation (Method Above using docker).* 
 
-#### Only for (The above installation method)
+* Note the destination path is only for the Home Assistant Supervised docker installation (Method Above using docker).* 
 
-#### Default method.
-
- Edit the shellcommand.yaml file where --> server_ip <-- your node server ip
-
-```
-download_movie: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{movie}}" 0'
-search_movie: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{movie}}" 1'
-download_option: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{option}}" 2'
-```
- 
- ### Advanced method. Addicionally you can also start the `donwload.sh` directly from the container !!!THIS METHOD PREVENT ISSUES WITH APOSTROPHE!!!
-
- * Note: just copy and replace to the below input on the shellcommand.yaml file located on `/usr/share/hassio/homeassistant/`. 
-
-```
-download_movie: /bin/bash /config/scripts/download.sh "{{movie}}" 0
-search_movie: /bin/bash /config/download.sh "{{movie}}" 1
-download_option: /bin/bash /config/scripts/download.sh "{{option}}" 2
-```
-
-* Note: Addicionally you also need to edit `download.sh` file located on `/usr/share/hassio/homeassistant/scripts/download.sh` to be able to run the python scrypt on the container.
-
-```
-#!/bin/bash
-
-movie="$1"
-mode="$2"
-
-response=$(python3 /config/hass_radarr_search_by_voice.py "$movie" "$mode")
-
-```
 
 # A) How to setup
 - Set your own values to the configuration variables in hass_radarr_search_by_voice.py
@@ -148,7 +118,7 @@ It should let you know if it found and added a movie (The Google Home Speaker, s
 ```script: !include scripts.yaml```
 ```shell_command: !include shellcommand.yaml```
 
-* Note needed if you are using the files on `/hass_radarr_search_by_voice/homeassistant_docker/`
+* Note DON'T needed if you are using the files on `/hass_radarr_search_by_voice/homeassistant_docker/`
 
 3º In your _homeassistant/scripts/download.sh_.  file replace ‘/path/to/hass_radarr_search_by_voice.py’ with the actual path where you saved the python file.
   *IMPORTANT NOTE: If you follow the installation method you don't need to edit the path because it point to `/usr/share/hassio/homeassistant/hass_radarr_search_by_voice.py`*
