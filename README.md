@@ -120,7 +120,7 @@ script: !include scripts.yaml
 shell_command: !include shellcommand.yaml
 ```
 
-* Note DON'T needed if you are using the files on `/hass_radarr_search_by_voice/homeassistant_docker/`
+* Note DON'T needed if you are using the files from `/hass_radarr_search_by_voice/homeassistant_docker/`
 
 3º In your _homeassistant/scripts/download.sh_.  file replace ‘/path/to/hass_radarr_search_by_voice.py’ with the actual path where you saved the python file.
   *IMPORTANT NOTE: If you follow the installation method you don't need to edit the path because it point to `/usr/share/hassio/homeassistant/hass_radarr_search_by_voice.py`*
