@@ -83,6 +83,8 @@ cp -r * /usr/share/hassio/homeassistant/
 
 #### Only for (The above installation method)
 
+#### Default method.
+
  Edit the shellcommand.yaml file where --> server_ip <-- your node server ip
 
 ```
@@ -90,7 +92,28 @@ download_movie: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/kno
 search_movie: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{movie}}" 1'
 download_option: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{option}}" 2'
 ```
+ 
+ ### Advanced method. Addicionally you can also start the `donwload.sh` directly from the container !!!THIS METHOD PREVENT ISSUES WITH APOSTROPHE!!!
 
+ * Note: just copy and replace to the below input on the shellcommand.yaml file located on `/usr/share/hassio/homeassistant/`. 
+
+```
+download_movie: /bin/bash /config/scripts/download.sh "{{movie}}" 0
+search_movie: /bin/bash /config/download.sh "{{movie}}" 1
+download_option: /bin/bash /config/scripts/download.sh "{{option}}" 2
+```
+
+* Note: Addicionally you also need to edit `download.sh` file located on `/usr/share/hassio/homeassistant/scripts/download.sh` to be able to run the python scrypt on the container.
+
+```
+#!/bin/bash
+
+movie="$1"
+mode="$2"
+
+response=$(python3 /config/hass_radarr_search_by_voice.py "$movie" "$mode")
+
+```
 
 # A) How to setup
 - Set your own values to the configuration variables in hass_radarr_search_by_voice.py
@@ -99,7 +122,7 @@ download_option: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/kn
 HASS_SERVER="" # Home assistant URL eg. localhost:8123 with port
 HASS_API="" # Home assistant legacy api password, leave blank if using long-lived token (used for voice feedback)
 HASS_TOKEN="" # Home assistant long-lived token, leave blank if using legacy API (used for voice feedback)
-HASS_SCRIPTS_PATH="" # Home assistant scripts path eg. /users/vr/.homeassistant/scripts
+HASS_SCRIPTS_PATH="" # Home assistant scripts path eg. /users/vr/.homeassistant/scripts or for container (e.g HA SUPERVISED) /config/scripts
 HASS_GOOGLE_HOME_ENTITY="" # Home assistant google home entity_id  eg. media_player.family_room_speaker
 RADARR_SERVER="" # with port usually :7878
 RADARR_API="" # api of radarr
@@ -124,6 +147,8 @@ It should let you know if it found and added a movie (The Google Home Speaker, s
 
 ```script: !include scripts.yaml```
 ```shell_command: !include shellcommand.yaml```
+
+* Note needed if you are using the files on `/hass_radarr_search_by_voice/homeassistant_docker/`
 
 3º In your _homeassistant/scripts/download.sh_.  file replace ‘/path/to/hass_radarr_search_by_voice.py’ with the actual path where you saved the python file.
   *IMPORTANT NOTE: If you follow the installation method you don't need to edit the path because it point to `/usr/share/hassio/homeassistant/hass_radarr_search_by_voice.py`*
@@ -160,7 +185,7 @@ It should let you know if it found and added a movie (The Google Home Speaker, s
     URL: the url you copied before at 0.D)
     Method: Post
     Content Type: application/json
-    body: { "action": "call_service", "service": "script.download_movie", "data": "{{TextField}}"} 
+    body: { "action": "call_service", "service": "script.download_movie", "data": "<<<{{TextField}}>>>"} 
     
     *IMPOTANT NOTE the text ("TextField" should be surrounded by grey spaces) , 
     
@@ -169,7 +194,7 @@ It should let you know if it found and added a movie (The Google Home Speaker, s
     URL: the url you copied before at 0.D)
     Method: Post
     Content Type: application/json
-    body: { "action": "call_service", "service": "script.download_movie", "movie": "{{TextField}}"} 
+    body: { "action": "call_service", "service": "script.download_movie", "movie": "<<<{{TextField}}>>>"} 
  
  9º - Save!!
 
@@ -189,3 +214,5 @@ Shell script for homeassistant that will call the python script.
 
 **homeassistant/scripts/remove_download.sh**
 Bonus shell script for removing the last movie added to radarr by this script.
+
+
