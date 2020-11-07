@@ -115,8 +115,10 @@ It should let you know if it found and added a movie (The Google Home Speaker, s
 
 2º Let homeassistant know where your scripts and shell commands will be by adding the following lines to your _configuration.yaml_ (in case you are using the same file structure as me).
 
-```script: !include scripts.yaml```
-```shell_command: !include shellcommand.yaml```
+```
+script: !include scripts.yaml
+shell_command: !include shellcommand.yaml
+```
 
 * Note DON'T needed if you are using the files on `/hass_radarr_search_by_voice/homeassistant_docker/`
 
