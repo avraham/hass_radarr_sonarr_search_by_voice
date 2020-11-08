@@ -8,6 +8,7 @@ Add movies to radarr by voice with Home Assistant and Google Home.
 - Google Home
 - https://www.themoviedb.org API Key
 - IFTTT Account
+- https://www.thetvdb.com api (Cost 11$)
 
 # Features
 Add movies to radarr by asking Google Home to do it.
