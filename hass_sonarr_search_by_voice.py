@@ -3,6 +3,7 @@ import requests
 import json
 import sys
 import os
+from tvdb_api_client import TVDBClient
 
 # User defined variables
 
@@ -204,14 +205,14 @@ class ShowDownloader:
             return -1
 
     def get_cast(self, tvdbId):
-        r = requests.get("https://api.thetvdb.com/3/series/"+str(tvdbId)+"?api_key="+TVDB_API)
+        r = requests.get("https://api.thetvdb.com/series/"+str(tvdbId)+"/actors")
         if r.status_code == requests.codes.ok:
             series = r.json()
-            cast = movie['cast']
-            if len(cast) > 1:
-                return(cast[0]['name']+" and "+cast[1]['name'])
+            data = series['data']
+            if len(data) > 1:
+                return(data[0]['name']+" et "+data[1]['name'])
             else:
-                return(cast[0]['name'])
+                return(data[0]['name'])
         else:
             return("")
 
