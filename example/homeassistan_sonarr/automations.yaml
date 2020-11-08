@@ -1,0 +1,34 @@
+# Example of entry in configuration.yaml
+
+# Turns on lights 1 hour before sunset if people are home
+# and if people get home between 16:00-23:00
+  - alias: 'ITFTTMovies'
+    trigger:
+      - platform: event
+        event_type: ifttt_webhook_received
+        event_data:
+          action: call_service
+    condition:
+      condition: and
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.event.data.service == 'script.download_movie' }}"
+    action:
+      - service_template: '{{ trigger.event.data.service }}'
+        data_template:
+          movie:  "{{ trigger.event.data['movie'] }}"
+  - alias: 'ITFTTTVShow'
+    trigger:
+      - platform: event
+        event_type: ifttt_webhook_received
+        event_data:
+          action: call_service
+    condition:
+      condition: and
+      conditions:
+        - condition: template
+          value_template: "{{ trigger.event.data.service == 'script.download_tvshow' }}"
+    action:
+      - service_template: '{{ trigger.event.data.service }}'
+        data_template:
+          tvshow:  "{{ trigger.event.data['tvshow'] }}"
