@@ -209,7 +209,14 @@ Bonus shell script for removing the last movie added to radarr by this script.
 
 
 # Installing hass_sonarr_search_by_voice.py just copy and edit the folling.
-
+!! IMPORTANT NOTE: You need to have your folder along side of your file `hass_sonarr_search_by_voice.py` so it need to looks like this.
+   ```
+   |- hass_sonarr_search_by_voice.py
+   |--- tvdb_api_client/
+   |--- scripts/
+   |- shellcommand.yaml
+   ...
+   ```
 - Set your own values to the configuration variables
 
 ```
@@ -222,6 +229,7 @@ SONARR_SERVER="" # with port
 SONARR_API=""
 SONARR_DOWNLOAD_PATH="" # aka rootFolderPath
 SONARR_QUALITY_PROFILE_ID=4  # 1080p
+client = TVDBClient("username", "user_key", "api_key") # Username, User_Key, API_KEY
 ```
 
 Test your installation
