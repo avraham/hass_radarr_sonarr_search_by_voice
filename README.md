@@ -86,7 +86,7 @@ cp -r * /usr/share/hassio/homeassistant/
 
 
 # A) How to setup
-- Set your own values to the configuration variables in hass_radarr_search_by_voice.py
+- Set your own values to the configuration variables in `hass_radarr_search_by_voice.py` and on your `hass_sonarr_search_by_voice.py`
 
 ```
 HASS_SERVER="" # Home assistant URL eg. localhost:8123 with port
