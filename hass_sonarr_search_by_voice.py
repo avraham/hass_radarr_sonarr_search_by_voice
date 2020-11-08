@@ -82,9 +82,9 @@ class ShowDownloader:
                                 break;
                             i += 1
                         if found == False:
-                            self.tts_google("Je n'ai pas trouvé de serie recent. Essayer avec la commande vocale Telecharge moi la serie.")
+                            self.tts_google("I don't been able to find the tv show.Try again with the vocal search.")
 
-                    elif mode == 1: # search movie and give 3 options
+                    elif mode == 1: # search tv show and give 3 options
                         # add to download_options file and read them out loud
                         i = 0
                         show = []
@@ -105,9 +105,9 @@ class ShowDownloader:
                     msg = self.save_options_found_and_compose_msg(show)
                     self.tts_google(msg)
                 else:
-                    self.tts_google("Aucune serie à été trouvé.")
+                    self.tts_google("Your tv show was not found.")
             else:
-                self.tts_google("Aucun acteur ni Actrice a été trouvé.")
+                self.tts_google("The actor was not found.")
         else:
             # add to downloads from download_options file
             download_option = int(show)-1
@@ -128,7 +128,7 @@ class ShowDownloader:
                         data = self.prepare_show_json(m)
                     self.add_show(data)
                 else:
-                    self.tts_google("Il n'i à aucune option.")
+                    self.tts_google("There is no options.")
 
 
     def prepare_show_json(self, media):
@@ -165,7 +165,7 @@ class ShowDownloader:
         r = requests.post("http://"+SONARR_SERVER+"/api/series?apikey="+SONARR_API,json.dumps(data))
 
         if r.status_code == 201:
-            self.tts_google("J'ai ajouté la serie "+str(data['title'])+" de, "+str(data['year'])+" avec l'acteur, "+str(data['cast'])+"  à votre liste de téléchargement.")
+            self.tts_google("I have added your tv show "+str(data['title'])+" started, "+str(data['year'])+" with the actor, "+str(data['cast'])+" to your download list.")
             show = r.json()
             with open(HASS_SCRIPTS_PATH+"/last_tvshow_download_added.txt", "w") as myfile:
                 myfile.write("show:"+str(SeriesName['id'])+"\n")
@@ -173,11 +173,11 @@ class ShowDownloader:
             res = self.is_show_already_added(data)
             if res >= 0:
                 if res == 0:
-                    self.tts_google("J'ai trouvé votre serie, m'ai je ne peux pas l'ajouté")
+                    self.tts_google("I found your tv show but i was not able to add it to your download list.")
                 else:
-                    self.tts_google("Le Serie, "+str(data['title'])+" de, "+str(data['year'])+" avec l'acteur, "+str(data['cast'])+" et déja dans votre list.")
+                    self.tts_google("The tv show, "+str(data['title'])+" starting on, "+str(data['year'])+" with the actors, "+str(data['cast'])+" is allready in your list.")
             else:
-                self.tts_google("Quelque Chose á mal tournée en essayent de ajouter la Serie.")
+                self.tts_google("Something wrong occured when trying to add the tv show to your download list.")
 
     def is_show_already_added(self, data):
         # print("http://"+SONARR_SERVER+"/api/movie?apikey="+SONARR_API)
@@ -209,7 +209,7 @@ class ShowDownloader:
             series = r.json()
             cast = movie['cast']
             if len(cast) > 1:
-                return(cast[0]['name']+" et "+cast[1]['name'])
+                return(cast[0]['name']+" and "+cast[1]['name'])
             else:
                 return(cast[0]['name'])
         else:
@@ -250,13 +250,13 @@ class ShowDownloader:
 
         i = 0
         if len(show) > 1:
-            msg = "J'ai trouvé "+str(len(show))+" options.\n"
+            msg = "I found, "+str(len(show))+" options.\n"
         else:
-            msg = "J'ai trouvé "+str(len(show))+" option.\n"
+            msg = "I found, "+str(len(show))+" option.\n"
         while i < len(show):
             m = show[i]
             if str(m['cast']) != "":
-                msg = msg+"Option "+str(i+1)+", "+str(m['title'])+" avec "+str(m['cast'])+".\n"
+                msg = msg+"Option "+str(i+1)+", "+str(m['title'])+" with "+str(m['cast'])+".\n"
             else:
                 msg = msg+"Option "+str(i+1)+", "+str(m['title'])+". "
             i += 1
