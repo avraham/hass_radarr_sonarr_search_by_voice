@@ -1,6 +1,6 @@
 #!/bin/bash
 
-movie="$1"
+tvshow="$1"
 mode="$2"
 
-response=$(python3 /usr/share/hassio/homeassistant/hass_radarr_search_by_voice.py "$movie" "$mode")
+response=$(python3 /path/to/hass_sonarr_search_by_voice.py "$tvshow" "$mode")
