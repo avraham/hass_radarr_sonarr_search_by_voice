@@ -124,10 +124,32 @@ shell_command: !include shellcommand.yaml
 
 3º In your _homeassistant/scripts/download.sh_.  file replace ‘/path/to/hass_radarr_search_by_voice.py’ with the actual path where you saved the python file.
   *IMPORTANT NOTE: If you follow the installation method you don't need to edit the path because it point to `/usr/share/hassio/homeassistant/hass_radarr_search_by_voice.py`*
-  
+ 
+ `downloads_tvshows.sh` <- for sonnar python script
+
+      ```
+      #!/bin/bash
+
+      tvshow="$1"
+      mode="$2"
+
+      response=$(python3 /YOUR_PATH/hass_sonarr_search_by_voice.py "$tvshow" "$mode")
+      ```
+
+`downloads.sh`
+
+    ```
+    #!/bin/bash
+
+    movie="$1"
+    mode="$2"
+
+    response=$(python3 /YOUR_PATH/hass_radarr_search_by_voice.py "$movie" "$mode")
+    ```
+
 4º Fill up the User defined variables in your _hass_radarr_search_by_voice.py_
 
-5º Make sure the give executable permissions to everything inside _homeassistant/scripts_ folder and to _hass_radarr_search_by_voice.py_ file.
+5º Make sure the give executable permissions to everything inside _homeassistant/scripts_ folder and to _hass_radarr_search_by_voice.py_ & _hass_sonarr_search_by_voice.py_ file.
 
 6º Bonus. Fill up the User defined variables in _homeassistant/scripts/remove_download.sh_
 
@@ -153,21 +175,19 @@ shell_command: !include shellcommand.yaml
  7º - Click on (Then That) --> webhoock
 
 8º - Enter the following:
-    
-    URL: the url you copied before at 0.D)
-    Method: Post
-    Content Type: application/json
-    body: { "action": "call_service", "service": "script.download_movie", "data": "<<<{{TextField}}>>>"} 
-    
-    *IMPOTANT NOTE the text ("TextField" should be surrounded by grey spaces) , 
-    
-   !IF YOU USE THE INSTALLATION METHOD ABOVE USE THE FOLLOWING!
-   
+
     URL: the url you copied before at 0.D)
     Method: Post
     Content Type: application/json
     body: { "action": "call_service", "service": "script.download_movie", "movie": "<<<{{TextField}}>>>"} 
  
+  8.1º - For for sonarr (TVshows)
+    
+    URL: the url you copied before at 0.D)
+    Method: Post
+    Content Type: application/json
+    body: { "action": "call_service", "service": "script.download_tvshow", "tvshow": " <<<{{TextField}}>>>"}
+    
  9º - Save!!
 
 ### Example folder Files overview:
@@ -186,5 +206,36 @@ Shell script for homeassistant that will call the python script.
 
 **homeassistant/scripts/remove_download.sh**
 Bonus shell script for removing the last movie added to radarr by this script.
+
+
+# Installing hass_sonarr_search_by_voice.py just copy and edit the folling.
+
+- Set your own values to the configuration variables
+
+```
+HASS_SERVER="" # Home assistant URL eg. localhost:8123 with port
+HASS_API="" # leave blank if using long-lived token
+HASS_TOKEN="" # leave blank if using legacy API
+HASS_SCRIPTS_PATH=""# Home assistant scripts path eg. /users/vr/.homeassistant/scripts
+HASS_GOOGLE_HOME_ENTITY="" # Home assistant google home entity_id  eg. media_player.family_room_speaker
+SONARR_SERVER="" # with port
+SONARR_API=""
+SONARR_DOWNLOAD_PATH="" # aka rootFolderPath
+SONARR_QUALITY_PROFILE_ID=4  # 1080p
+```
+
+Test your installation
+
+```
+python3 hass_sonarr_search_by_voice.py "The Crown" "0"
+```
+
+-> Step C) (Above) if you haven't allready done it.
+
+    You need to set upt in `donwload.sh` & `download_tvshows.sh` the path of you python script e.g
+
+
+
+-> Step D) 8.1º
 
 
