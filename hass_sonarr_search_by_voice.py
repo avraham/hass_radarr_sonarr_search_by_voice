@@ -24,11 +24,12 @@ HASS_GOOGLE_HOME_ENTITY=""
 
 
 SONARR_SERVER="" # with port
-SONARR_API=""
+SONARR_API="" #api of sonarr
 SONARR_DOWNLOAD_PATH="" # aka rootFolderPath
 SONARR_QUALITY_PROFILE_ID=4  # 1080p
 
-TVDB_API="" #Need a paid subcrition on thetvdb.com it cost 11$ per year thi is the V4 api Key not legacy api key
+client = TVDBClient("username", "user_key", "api_key") #Need a paid subcrition on thetvdb.com it cost 11$ per year thi is the V3 api Key not v3 (IMPORTANT THETVDB.COM will change to v4 api)
+
 
 # ------------------------------------
 
@@ -54,7 +55,7 @@ class ShowDownloader:
         term = show
         search_term = term.replace(" ", "%20")
         current_years = [year, year+1, year+2]
-        for i  in range(1,49):
+        for i  in range(1,69):
          current_years .append(year-i)
 
 
