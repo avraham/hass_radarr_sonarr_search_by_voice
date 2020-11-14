@@ -1,3 +1,3 @@
-download_movie: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{movie}}" 0'
-search_movie: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{movie}}" 1'
-download_option: /usr/bin/ssh -i /config/id_rsa -o UserKnownHostsFile=/config/known_hosts root@server_ip '/bin/bash /usr/share/hassio/homeassistant/scripts/download.sh "{{option}}" 2'
+download_movie: /bin/bash /config/scripts/download.sh "{{movie}}" 0
+search_movie: /bin/bash /config/download.sh "{{movie}}" 1
+download_option: /bin/bash /config/scripts/download.sh "{{option}}" 2

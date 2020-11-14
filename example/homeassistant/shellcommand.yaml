@@ -1,3 +1,4 @@
-download_movie: /path/to/download.sh "{{movie}}" 0
-search_movie: /path/to/download.sh "{{movie}}" 1
-download_option: /path/to/download.sh "{{option}}" 2
+download_movie: /bin/bash /path/to/scripts/download.sh "{{movie}}" 0
+search_movie: /bin/bash /path/to/scripts/download.sh "{{movie}}" 1
+download_option: /bin/bash /path/to/scripts/download.sh "{{option}}" 2
+download_tvshow: /bin/bash /path/to/scripts/download_tvshow.sh "{{tvshow}}" 0
