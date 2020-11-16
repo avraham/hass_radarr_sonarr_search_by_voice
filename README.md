@@ -1,4 +1,4 @@
-# HA_sonarr_radarr_search_by_voice
+# hass_radarr_sonarr_search_by_voice
 Add movies and tv shows to radarr and sonarr by voice with Home Assistant and a smart speaker (Google Home, Echo) and receive voice feedback.
 
 
@@ -18,7 +18,7 @@ This script has several use cases that can be called with a different phrase dep
 
 - **Add best guess (mode 0)**. This is the most common use. Tell a movie/series title or partial title and it will add the best guess from upcoming and last 50 years to radarr/sonarr.
 
-- **Full search (mode 1)**. If the best guess feature doesn't find the correct movie/series you cab do a full search. Tell a movie/series title or partial title and it will offers up to 3 enumerated options to choose from.
+- **Full search (mode 1)**. If the best guess feature doesn't find the correct movie/series you can do a full search. Tell a movie/series title or partial title and it will offers up to 3 enumerated options to choose from.
 
 - **Add option from previous search (mode 2)**. Tell it a number to download from previous enumerated options given by search.
 
