@@ -80,7 +80,7 @@ HomeAssistant
 - **api_key**. Home assistant legacy api password, leave blank if using long-lived token (used for voice feedback)
 - **token**. Home assistant long-lived token, leave blank if using legacy API (used for voice feedback)
 - **scripts_path**. Home assistant scripts path eg. /users/vr/.homeassistant/scripts or for container (e.g HA SUPERVISED) /config/scripts
-- **speaker_entity**. Home assistant google home entity_id  eg. media_player.family_room_speaker
+- **speaker_entity**. Home assistant smart speaker entity_id  eg. media_player.family_room_speaker
 - **tts_service**. Your Home assistant text-to-speech service. eg. google_say
 
 Radarr
