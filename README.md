@@ -16,7 +16,7 @@ Add movies to radarr and tv shows to sonarr by asking your smart speaker to do i
 
 This script has several use cases that can be called with a different phrase depending your setup:
 
-- **Add best guess (mode 0)**. This is the most common use. Tell a movie/series title or partial title and it will add the best guess from upcoming and last 50 years to radarr/sonarr.
+- **Add best guess (mode 0)**. This is the most common use. Tell a movie/series title or partial title and it will add the best guess from upcoming  movie/series and last 50 years to radarr/sonarr.
 
 - **Full search (mode 1)**. If the best guess feature doesn't find the correct movie/series you can do a full search. Tell a movie/series title or partial title and it will offers up to 3 enumerated options to choose from.
 
