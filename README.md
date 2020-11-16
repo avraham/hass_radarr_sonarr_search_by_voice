@@ -72,7 +72,8 @@ git clone THIS_REPOSITORY
 
 
 # A) How to setup
-- Set your own values in the configuration file `ha_radarr_sonarr.conf` without quotes. If you are not using Radarr just leave that party blank. The same goes for Sonarr.
+- Set your own values in the configuration file `ha_radarr_sonarr.conf` without quotes.
+If you are not using Radarr just leave that part blank. The same goes for Sonarr.
 
 HomeAssistant
 - **server_url**. Home assistant URL eg. localhost:8123 with port
