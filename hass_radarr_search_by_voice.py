@@ -3,34 +3,7 @@ import requests
 import json
 import sys
 import os
-
-# User defined variables
-
-# Home assistant URL eg. localhost:8123 with port
-HASS_SERVER=""
-
-# Home assistant legacy api password
-HASS_API="" # leave blank if using long-lived token
-
-# Home assistant long-lived token
-HASS_TOKEN="" # leave blank if using legacy API
-
-# Home assistant scripts path eg. /users/vr/.homeassistant/scripts
-HASS_SCRIPTS_PATH=""
-
-# Home assistant google home entity_id  eg. media_player.family_room_speaker
-HASS_GOOGLE_HOME_ENTITY=""
-
-
-RADARR_SERVER="" # with port
-RADARR_API=""
-RADARR_DOWNLOAD_PATH="" # aka rootFolderPath
-RADARR_QUALITY_PROFILE_ID=4  # 1080p
-
-TMDBID_API=""
-
-# ------------------------------------
-
+import configparser
 
 class MovieDownloader:
 
@@ -40,7 +13,7 @@ class MovieDownloader:
     Constrctor
 
     :param str movie: Title of the movie or option number if mode 2 is used
-    :param int mode: 0 | 1 | 2
+    :param int mode: 0 | 1 | 2 | 3
         mode 0 - takes the movie string and download best guess from upcoming and recent years.
         mode 1 - search movie string and offers 3 options to choose from.
         mode 2 - download option given from previous search.
@@ -48,10 +21,12 @@ class MovieDownloader:
     '''
     def __init__(self, movie, mode=0):
 
+        self.loadParameters()
 
         year = datetime.datetime.now().year
         term = movie
         search_term = term.replace(" ", "%20")
+
         current_years = [year, year+1, year+2]
         for i  in range(1,49):
          current_years .append(year-i)
@@ -59,7 +34,7 @@ class MovieDownloader:
         if mode == 0 or mode == 1: # we are making a search by movie title
             # search
 
-            r = requests.get("http://"+RADARR_SERVER+"/api/movie/lookup?apikey="+RADARR_API+"&term="+search_term)
+            r = requests.get("http://"+self.RADARR_SERVER+"/api/movie/lookup?apikey="+self.RADARR_API+"&term="+search_term)
 
             if r.status_code == requests.codes.ok:
 
@@ -95,7 +70,7 @@ class MovieDownloader:
                         self.tts_google(msg)
 
 
-        elif mode == 3:  # search latest movies by Actor/Actress and offers 5 options to choose from.
+        elif mode == 3 and self.TMDBID_API_V3:  # search latest movies by Actor/Actress and offers 5 options to choose from.
             actor_id = self.get_actor_id(search_term)
             if actor_id > 0:
                 movies = []
@@ -112,12 +87,12 @@ class MovieDownloader:
             download_option = int(movie)-1
             data = {}
 
-            with open(HASS_SCRIPTS_PATH+'/download_options.txt') as json_data:
+            with open(self.HASS_SCRIPTS_PATH+'/download_options.txt') as json_data:
                 movies = json.load(json_data)
                 if download_option > -1 and len(movies) >= download_option:
                     m = movies[download_option]
                     if m['qualityProfileId'] == -1 and m['tmdbId'] > 0:
-                        r = requests.get("http://"+RADARR_SERVER+"/api/movie/lookup/tmdb?apikey="+RADARR_API+"&tmdbId="+str(m['tmdbId']))
+                        r = requests.get("http://"+self.RADARR_SERVER+"/api/movie/lookup/tmdb?apikey="+self.RADARR_API+"&tmdbId="+str(m['tmdbId']))
                         if r.status_code == requests.codes.ok:
                             media_list = r.json()
                             # print(media_list)
@@ -133,11 +108,11 @@ class MovieDownloader:
     def prepare_movie_json(self, media):
         data = {}
         data['title'] = media['title']
-        data['qualityProfileId'] = RADARR_QUALITY_PROFILE_ID
+        data['qualityProfileId'] = self.RADARR_QUALITY_PROFILE_ID
         data['titleSlug'] = media['titleSlug']
         data['images'] = media['images']
         data['tmdbId'] = media['tmdbId']
-        data['rootFolderPath'] = RADARR_DOWNLOAD_PATH
+        data['rootFolderPath'] = self.RADARR_DOWNLOAD_PATH
         data['monitored'] = True
         data['minimumAvailability'] = 'released'
         data['year'] = media['year']
@@ -161,12 +136,15 @@ class MovieDownloader:
         return data
 
     def add_movie(self, data):
-        r = requests.post("http://"+RADARR_SERVER+"/api/movie?apikey="+RADARR_API,json.dumps(data))
+        r = requests.post("http://"+self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API,json.dumps(data))
 
         if r.status_code == 201:
-            self.tts_google("I added the movie "+str(data['title'])+" with "+str(data['cast'])+" to your download list.")
+            if str(data['cast']) == "":
+                self.tts_google("I added the movie "+str(data['title'])+" to your list.")
+            else:
+                self.tts_google("I added the movie "+str(data['title'])+" with "+str(data['cast'])+" to your list.")
             movie = r.json()
-            with open(HASS_SCRIPTS_PATH+"/last_download_added.txt", "w") as myfile:
+            with open(self.HASS_SCRIPTS_PATH+"/last_download_added.txt", "w") as myfile:
                 myfile.write("movie:"+str(movie['id'])+"\n")
         else:
             res = self.is_movie_already_added(data)
@@ -174,13 +152,16 @@ class MovieDownloader:
                 if res == 0:
                     self.tts_google("I found a movie, but I wasn't able to add it.")
                 else:
-                    self.tts_google("The movie "+str(data['title'])+" with "+str(data['cast'])+" is already on your list.")
+                    if str(data['cast']) == "":
+                        self.tts_google("The movie "+str(data['title'])+" is already on your list.")
+                    else:
+                        self.tts_google("The movie "+str(data['title'])+" with "+str(data['cast'])+" is already on your list.")
             else:
                 self.tts_google("Something went wrong when adding the movie.")
 
     def is_movie_already_added(self, data):
-        # print("http://"+RADARR_SERVER+"/api/movie?apikey="+RADARR_API)
-        r = requests.get("http://"+RADARR_SERVER+"/api/movie?apikey="+RADARR_API)
+        # print("http://"+self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
+        r = requests.get("http://"+self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
 
         found = False
         # print(data['tmdbId'])
@@ -202,20 +183,22 @@ class MovieDownloader:
         else:
             return -1
 
-    def get_cast(self, movieId):
-        r = requests.get("https://api.themoviedb.org/3/movie/"+str(movieId)+"/credits?api_key="+TMDBID_API)
-        if r.status_code == requests.codes.ok:
-            movie = r.json()
-            cast = movie['cast']
-            if len(cast) > 1:
-                return(cast[0]['name']+" and "+cast[1]['name'])
+    def get_cast(self, tmdbId):
+        if self.TMDBID_API_V3:
+            r = requests.get("https://api.themoviedb.org/3/movie/"+str(tmdbId)+"/credits?api_key="+self.TMDBID_API_V3)
+            if r.status_code == requests.codes.ok:
+                movie = r.json()
+                cast = movie['cast']
+                if len(cast) > 1:
+                    return(cast[0]['name']+" and "+cast[1]['name'])
+                else:
+                    return(cast[0]['name'])
             else:
-                return(cast[0]['name'])
-        else:
-            return("")
+                return("")
+
 
     def get_actor_id(self, actor_name):
-        r = requests.get("https://api.themoviedb.org/3/search/person?language=en-US&page=1&include_adult=false&api_key="+TMDBID_API+"&query="+actor_name)
+        r = requests.get("https://api.themoviedb.org/3/search/person?language=en-US&page=1&include_adult=false&api_key="+self.TMDBID_API_V3+"&query="+actor_name)
         if r.status_code == requests.codes.ok:
             results = r.json()
             if int(results['total_results']) > 0:
@@ -230,7 +213,7 @@ class MovieDownloader:
         i = 0
         movies = []
         while i < len(latest_years) and len(movies) < 5:
-            r = requests.get("https://api.themoviedb.org/3/discover/movie?language=en-US&page=1&sort_by=release_date.desc&include_adult=false&include_video=false&page=1&primary_release_year=&api_key="+TMDBID_API+"&primary_release_year="+str(latest_years[i])+"&with_cast="+str(actor_id))
+            r = requests.get("https://api.themoviedb.org/3/discover/movie?language=en-US&page=1&sort_by=release_date.desc&include_adult=false&include_video=false&page=1&primary_release_year=&api_key="+self.TMDBID_API_V3+"&primary_release_year="+str(latest_years[i])+"&with_cast="+str(actor_id))
             if r.status_code == requests.codes.ok:
                 results = r.json()
                 if int(results['total_results']) > 0:
@@ -244,7 +227,7 @@ class MovieDownloader:
     def save_options_found_and_compose_msg(self, movies):
         msg=""
 
-        with open(HASS_SCRIPTS_PATH+"/download_options.txt", "w") as myfile:
+        with open(self.HASS_SCRIPTS_PATH+"/download_options.txt", "w") as myfile:
             json.dump(movies, myfile)
 
         i = 0
@@ -262,22 +245,96 @@ class MovieDownloader:
         return msg
 
     def tts_google(self, msg):
-        data = {"entity_id": HASS_GOOGLE_HOME_ENTITY, "message": msg}
+        data = {"entity_id": self.HASS_SPEAKER_ENTITY, "message": msg}
 
-        if HASS_API == "" and HASS_TOKEN != "":
+        if self.HASS_API == "" and self.HASS_TOKEN != "":
             headers = {
-                'Authorization': 'Bearer '+HASS_TOKEN
+                'Authorization': 'Bearer '+self.HASS_TOKEN
             }
-            r = requests.post("http://"+HASS_SERVER+"/api/services/tts/google_translate_say",json.dumps(data), headers=headers)
+            r = requests.post("http://"+self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE,json.dumps(data), headers=headers)
 
         else:
-            r = requests.post("http://"+HASS_SERVER+"/api/services/tts/google__translate_say?api_password="+HASS_API,json.dumps(data))
+            r = requests.post("http://"+self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE+"?api_password="+self.HASS_API,json.dumps(data))
 
 
         # assistant-relay
         # command_data = {"command": msg}
-        # r = requests.post("http://"+HASS_SERVER+"/api/services/rest_command/gh_broadcast?api_password="+HASS_API,json.dumps(command_data))
+        # r = requests.post("http://"+self.HASS_SERVER+"/api/services/rest_command/gh_broadcast?api_password="+self.HASS_API,json.dumps(command_data))
         print(msg)
+
+
+    def loadParameters(self):
+        config=configparser.ConfigParser()
+        configFile = './ha_radarr_sonarr.conf'
+
+
+        config.read('./ha_radarr_sonarr.conf')
+
+        self.HASS_SERVER = config.get('HomeAssistant', 'server_url')
+        self.HASS_API = config.get('HomeAssistant', 'api_key')
+        self.HASS_TOKEN = config.get('HomeAssistant', 'token')
+        self.HASS_SCRIPTS_PATH = config.get('HomeAssistant', 'scripts_path')
+        self.HASS_SPEAKER_ENTITY = config.get('HomeAssistant', 'speaker_entity')
+        self.HASS_TTS_SERVICE = config.get('HomeAssistant', 'tts_service')
+
+        self.RADARR_SERVER = config.get('Radarr', 'server_url')
+        self.RADARR_API = config.get('Radarr', 'api_key')
+        self.RADARR_DOWNLOAD_PATH = config.get('Radarr', 'root_directory')
+        self.RADARR_QUALITY_PROFILE_ID = int(config.get('Radarr', 'profile_id'))
+
+        self.TMDBID_API_V3 = config.get('Services', 'tmdmid_api_key_v3')
+
+
+
+
+        self.checkConfig()
+
+
+    def checkConfig(self):
+        error_messages = []
+        warning_messages = []
+
+        if not self.HASS_SERVER:
+            error_messages.append('Home Assistant url with port (usually localhost:8123) must be defined')
+
+        if not self.HASS_API and not self.HASS_TOKEN:
+            error_messages.append('A Long-lived token or HA API password (legacy) must be defined')
+
+        if not self.HASS_SCRIPTS_PATH:
+            error_messages.append('Path were this script is located. must be defined. eg. /users/vr/.homeassistant/scripts or for container (e.g HA SUPERVISED) /config/scripts')
+
+        if not self.HASS_SPEAKER_ENTITY:
+            error_messages.append('Home assistant speaker entity_id must be specified. eg. media_player.family_room_speaker')
+
+        if not self.HASS_TTS_SERVICE:
+            error_messages.append('Home assistant text-to-speech service must be specified.')
+
+        if not self.RADARR_SERVER:
+            error_messages.append('Radarr url with port (usually :7878) must be defined')
+
+        if not self.RADARR_API:
+            error_messages.append('Radarr API Key must be defined')
+
+        if not self.RADARR_DOWNLOAD_PATH:
+            error_messages.append('Radarr root_directory also knwon as rootFolderPath must be defined')
+
+        if self.RADARR_QUALITY_PROFILE_ID == 0:
+            error_messages.append('Radarr quality profile id must be defined. Default value is 4 (1080p)')
+
+        if not self.TMDBID_API_V3:
+            warning_messages.append("Warning. tmdmid_api_key_v3 (optional)(recommended) is not set. You won't be able to search movies by actor or actress and your speaker's feedback will miss cast details for movies. https://www.themoviedb.org/settings/api v3 auth")
+
+        if len(error_messages) > 0:
+            print('Problem(s) in configuration file :')
+            for m in error_messages:
+                print(m)
+
+        if len(warning_messages) > 0:
+            for m in warning_messages:
+                print(m)
+
+        if len(error_messages) > 0:
+            exit(1)
 
 
 query = sys.argv[1]

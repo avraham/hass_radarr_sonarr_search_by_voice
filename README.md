@@ -1,27 +1,30 @@
 # HA_sonarr_radarr_search_by_voice
-Add movies to radarr by voice with Home Assistant and Google Home.
+Add movies and tv shows to radarr and sonarr by voice with Home Assistant and a smart speaker (Google Home, Echo) and receive voice feedback.
 
 
 # Requirements
 - Home Assistant
 - Radarr
-- Google Home
-- https://www.themoviedb.org API Key
+- Sonarr
+- Smart speaker (Google Home, Echo, etc)
 - IFTTT Account
-- https://www.thetvdb.com api (Cost 11$)
+- https://www.themoviedb.org API Key (Optional)
+- http://www.omdbapi.com/ API Key (Optional)
 
 # Features
-Add movies to radarr by asking Google Home to do it.
+Add movies to radarr and tv shows to sonarr by asking your smart speaker to do it. You can set it up only for radarr, only for sonarr or both.
 
-- Mode 0 (best guess). Tell it a movie title or partial title and it will add the best guess from upcoming and recent years to radarr.
+This script has several use cases that can be called with a different phrase depending your setup:
 
-- Mode 1 (search). Tell it a movie title or partial title and it will offers up to 3 options to choose from.
+- **Add best guess (mode 0)**. This is the most common use. Tell a movie/series title or partial title and it will add the best guess from upcoming and last 50 years to radarr/sonarr.
 
-- Mode 2. Tell it a number to download from previous options given by search.
+- **Full search (mode 1)**. If the best guess feature doesn't find the correct movie/series you cab do a full search. Tell a movie/series title or partial title and it will offers up to 3 enumerated options to choose from.
 
-- Mode 3 (search by actor/actress). Search recent movies with an specific actor/actress and it will offers up to 5 options to choose from.
+- **Add option from previous search (mode 2)**. Tell it a number to download from previous enumerated options given by search.
 
-## Install Home Assistant (Home Assistant Supervised ) using Docker.
+- **Search by actor/actress (Mode 3)**. Movies Only. Search recent movies with an specific actor/actress and it will offers up to 5 options to choose from.
+
+## Install Home Assistant (Home Assistant Supervised ) using Docker. (Skip if you already have Home Assistant)
   1º - Download the installer.sh from HA(Home Assistant) repository.
       Command:
 ```
@@ -34,7 +37,7 @@ curl -Lo installer.sh https://raw.githubusercontent.com/home-assistant/supervise
 bash installer.sh --machine MACHINE_TYPE
 ```
 
-#### Supported Machine types
+##### Supported Machine types
 
 - intel-nuc
 - odroid-c2
@@ -54,64 +57,87 @@ bash installer.sh --machine MACHINE_TYPE
 
 After sometime you should be able to go to http://ip_of_server:8123/ it can take some time on the first start, so be pacient.
 
-#### Git Clone this script
+## Git Clone this script
 install git
 
 ```
 apt-get install -y git
 ```
 
-Now it's time to clone the repo to you folder 
+Now it's time to clone the repo to you folder
 
 ```
-git clone THIS_REPOSITORY 
+git clone THIS_REPOSITORY
 ```
-
-go to your cloned folder 
-
-```
-cd hass_radarr_search_by_voice
-```
-
-copy `hass_radarr_search_by_voice.py` and `hass_radarr_search_by_voice/example/homeassistant_docker/` to the `/usr/share/hassio/homeassistant/`
-
-!! WARNING: if you have allready a `configuration.yaml` please backup it First because the the next step will replace it / after that you need to import your configs manually (Copy and paste with nano/vim or any text editor) from your backup file, (configuration.yaml) to the new once have been copied. IF YOUR INSTALLATION IS A FRESH INSTALL JUST IGNORE THIS WARNING !
-
-```
-cp hass_radarr_search_by_voice.py /usr/share/hassio/homeassistant/
-cd /example/homeassistant_docker/
-cp -r * /usr/share/hassio/homeassistant/
-```
-
-* Note the destination path is only for the Home Assistant Supervised docker installation (Method Above using docker).* 
 
 
 # A) How to setup
-- Set your own values to the configuration variables in `hass_radarr_search_by_voice.py` and on your `hass_sonarr_search_by_voice.py`
+- Set your own values in the configuration file `ha_radarr_sonarr.conf` without quotes.
 
-```
-HASS_SERVER="" # Home assistant URL eg. localhost:8123 with port
-HASS_API="" # Home assistant legacy api password, leave blank if using long-lived token (used for voice feedback)
-HASS_TOKEN="" # Home assistant long-lived token, leave blank if using legacy API (used for voice feedback)
-HASS_SCRIPTS_PATH="" # Home assistant scripts path eg. /users/vr/.homeassistant/scripts or for container (e.g HA SUPERVISED) /config/scripts
-HASS_GOOGLE_HOME_ENTITY="" # Home assistant google home entity_id  eg. media_player.family_room_speaker
-RADARR_SERVER="" # with port usually :7878
-RADARR_API="" # api of radarr
-RADARR_DOWNLOAD_PATH="" # aka rootFolderPath
-RADARR_QUALITY_PROFILE_ID=4  # 1080p
-TMDBID_API="" # themoviedb API Key
-```
-*Note to get HASS_TOKEN go to your home assistant (http://ip_of_server:8123/) then go to Your Profile (last option on the button at the left tab) then go to  Long-Lived Access Tokens at the end of the page.*
+[HomeAssistant]
+**server_url**. Home assistant URL eg. localhost:8123 with port
+**api_key**. Home assistant legacy api password, leave blank if using long-lived token (used for voice feedback)
+**token**. Home assistant long-lived token, leave blank if using legacy API (used for voice feedback)
+**scripts_path**. Home assistant scripts path eg. /users/vr/.homeassistant/scripts or for container (e.g HA SUPERVISED) /config/scripts
+**speaker_entity**. Home assistant google home entity_id  eg. media_player.family_room_speaker
+**tts_service**. Your Home assistant text-to-speech service. eg. google_say
 
-*Note to get the HASS_GOOGLE_HOME_ENTITY go to your home assistant (http://ip_of_server:8123/) then go to Your Configuration tab -> Entities , there is all entity ID of the devices in your home.*
+[Radarr]
+**server_url**. Radarr url with port (usually :7878)
+**api_key**. Radarr API Key
+**root_directory**. Radarr root_directory also knwon as rootFolderPath
+**profile_id**. Radarr quality profile id. eg. 4 is 1080p
+
+[Sonarr]
+**server_url**. Sonarr url with port (usually :8989)
+**api_key**. Sonarr API Key
+**root_directory**. Sonarr root_directory also knwon as rootFolderPath
+**profile_id**. Sonarr quality profile id
+
+[Services]
+**omdb_api_key**. (Optional) (recommended). Used for cast details feedback for tvshows added. http://www.omdbapi.com/apikey.aspx
+**tmdmid_api_key_v3**. (Optional) (recommended). Used for cast details feedback for tvshows added and search movies by actor or actress. https://www.themoviedb.org/settings/api v3 auth
+
+*Note to get your HomeAssistant token go to your home assistant (http://ip_of_server:8123/) then go to Your Profile (last option on the button at the left tab) then go to  Long-Lived Access Tokens at the end of the page.*
+
+*Note to get the HomeAssistant speaker_entity go to your home assistant (http://ip_of_server:8123/) then go to Your Configuration tab -> Entities , there is all entity ID of the devices in your home.*
 
 # B) How to test from command line
-Go to the path of the script, make sure the give executable permissions and run:
+For movies go to the path of the script, make sure the give executable permissions and run:
 ```python3 ./hass_radarr_search_by_voice.py "Artemis Fowl" "0"```
+
+Note. First parameter is the movie title, second parameter is the _mode_: best guess, full search, search by actor.
+
+For series go to the path of the script, make sure the give executable permissions and run:
+```python3 ./hass_sonarr_search_by_voice.py "The Mandalorian" "0" "future"```
+
+Note. First parameter is the movie title, second parameter is the _mode_: best guess, full search; the third parameter is _what should be monitored_: `future` monitors episodes that have not aired yet and `missing` monitors all missing episodes that do not have files or have not aired yet.
 
 It should let you know if it found and added a movie (The Google Home Speaker, should speak back).
 
 # C) Integrate with Home Assistant
+
+##### 1) Hassio only.
+1º Copy the content of the _example/homeassistant_docker_.
+go to your cloned folder and copy the files to the Home Assistant folder.
+
+```
+cd hass_radarr_sonarr_search_by_voice
+```
+
+copy `hass_radarr_search_by_voice.py`, `hass_sonarr_search_by_voice.py`, `ha_radarr_sonarr.conf` and `hass_radarr_search_by_voice/example/homeassistant_docker/` to the `/usr/share/hassio/homeassistant/`
+
+!! WARNING: if you have allready a `configuration.yaml` please backup it First because the the next step will replace it / after that you need to import your configs manually (Copy and paste with nano/vim or any text editor) from your backup file, (configuration.yaml) to the new once have been copied. IF YOUR INSTALLATION IS A FRESH INSTALL JUST IGNORE THIS WARNING !
+
+```
+cp hass_radarr_search_by_voice.py hass_sonarr_search_by_voice.py ha_radarr_sonarr.conf /usr/share/hassio/homeassistant/
+cd /example/homeassistant_docker/
+cp -r * /usr/share/hassio/homeassistant/
+```
+
+* Note the destination path is only for the Home Assistant Supervised docker installation (Method Above using docker).*
+
+#####  1) Non Hassio only.
 1º Copy the content of the _example/homeassistant_ folder to your homeassistant folder. If you already have a custom yaml file for your own scripts and shell commands then just add the content of each files (_scripts.yaml_ and _shellcommand.yaml_) to your own files.
 
 2º Let homeassistant know where your scripts and shell commands will be by adding the following lines to your _configuration.yaml_ (in case you are using the same file structure as me).
@@ -121,77 +147,59 @@ script: !include scripts.yaml
 shell_command: !include shellcommand.yaml
 ```
 
-* Note DON'T needed if you are using the files from `/hass_radarr_search_by_voice/homeassistant_docker/`
+3º In your _homeassistant/scripts/download.sh_ and _homeassistant/scripts/download_tvshow.sh_ files replace ‘/path/to/hass_radarr_search_by_voice.py’ and ‘/path/to/hass_sonarr_search_by_voice.py’ respectively with the actual path where you saved the python file.
+  *IMPORTANT NOTE: If you are using Hassio and followed the installation method you don't need to edit the path because it point to `/usr/share/hassio/homeassistant/hass_radarr_search_by_voice.py`*
 
-3º In your _homeassistant/scripts/download.sh_.  file replace ‘/path/to/hass_radarr_search_by_voice.py’ with the actual path where you saved the python file.
-  *IMPORTANT NOTE: If you follow the installation method you don't need to edit the path because it point to `/usr/share/hassio/homeassistant/hass_radarr_search_by_voice.py`*
- 
- `downloads_tvshows.sh` <- for sonnar python script
 
-      ```
-      #!/bin/bash
+#####  2) Hassio and Non Hassio.
 
-      tvshow="$1"
-      mode="$2"
+4º Fill up the User defined variables in Configuration file `ha_radarr_sonarr.conf` if you haven't done it.
 
-      response=$(python3 /YOUR_PATH/hass_sonarr_search_by_voice.py "$tvshow" "$mode")
-      ```
+5º Make sure the give executable permissions to _hass_radarr_search_by_voice.py_ & _hass_sonarr_search_by_voice.py_ file.
 
-`downloads.sh`
+6º Bonus (optional). Fill up the User defined variables in _homeassistant/scripts/remove_download.sh_
 
-    ```
-    #!/bin/bash
-
-    movie="$1"
-    mode="$2"
-
-    response=$(python3 /YOUR_PATH/hass_radarr_search_by_voice.py "$movie" "$mode")
-    ```
-
-4º Fill up the User defined variables in your _hass_radarr_search_by_voice.py_
-
-5º Make sure the give executable permissions to everything inside _homeassistant/scripts_ folder and to _hass_radarr_search_by_voice.py_ & _hass_sonarr_search_by_voice.py_ file.
-
-6º Bonus. Fill up the User defined variables in _homeassistant/scripts/remove_download.sh_
-
-# D) Use it by voice with Google Assistant and IFTTT
+# D) Use it by voice with your smart speaker and IFTTT
  0º - Setup IFTTT integration on Home Assistant. Go to Configuration > integrations > IFTTT. It will give you a private IFTTT_WEEBHOOK_ID, save it somewhere this is important.
- 
+
  1º - Go to https://ifttt.com
- 
+
  2º - create a new applet
- 
- 3º - click on (if this) -> Google Assistant -> Say a phrase with a text ingredient
- 
+
+ 3º - click on (if this) -> Google Assistant -> Say a phrase with a text ingredient (or whatever smart speaker)
+
  4º - What do you want to say? Enter: Download the movie $
-   
-   *Note the $(Dollar symbol ) is very important.THIS IS A EXEMPLE OF WHAT YOU MAY SAY TO DOWNLOAD THE MOVIE $*
+
+   *Note the $(Dollar symbol ) is very important.THIS IS A EXAMPLE OF WHAT YOU MAY SAY TO DOWNLOAD THE MOVIE $*
 
 5º - What do you want the Assistant to say in response? Enter: Searching the movie $
-     
-   *Note the $(Dollar symbol ) is very important.THIS IS A EXEMPLE OF WHAT AFTER YOUR REQUEST $*
- 
+
+   *Note the $(Dollar symbol ) is very important.THIS IS A EXAMPLE OF WHAT AFTER YOUR REQUEST $*
+
  6º - Save!!
- 
- 7º - Click on (Then That) --> webhoock
+
+ 7º - Click on (Then That) --> webhook
 
 8º - Enter the following:
 
     URL: the url you copied before at 0.D)
     Method: Post
     Content Type: application/json
-    body: { "action": "call_service", "service": "script.download_movie", "movie": "<<<{{TextField}}>>>"} 
- 
+    body: { "action": "call_service", "service": "script.download_movie", "movie": "<<<{{TextField}}>>>"}
+
   8.1º - For for sonarr (TVshows)
-    
+
     URL: the url you copied before at 0.D)
     Method: Post
     Content Type: application/json
     body: { "action": "call_service", "service": "script.download_tvshow", "tvshow": " <<<{{TextField}}>>>"}
-    
- 9º - Save!!
 
-### Example folder Files overview:
+ 9º - Save and test with your smart speaker!!
+
+
+
+
+### Example folder Files overview (Additional Information):
 
 **homeassistant folder**.
 This is your homeassistant folder where the configuration yaml files are.
@@ -208,43 +216,4 @@ Shell script for homeassistant that will call the python script.
 **homeassistant/scripts/remove_download.sh**
 Bonus shell script for removing the last movie added to radarr by this script.
 
-
-# Installing hass_sonarr_search_by_voice.py just copy and edit the folling.
-!! IMPORTANT NOTE: You need to have your folder along side of your file `hass_sonarr_search_by_voice.py` so it need to looks like this.
-   ```
-   |- hass_sonarr_search_by_voice.py
-   |--- tvdb_api_client/
-   |--- scripts/
-   |- shellcommand.yaml
-   ...
-   ```
-- Set your own values to the configuration variables
-
-```
-HASS_SERVER="" # Home assistant URL eg. localhost:8123 with port
-HASS_API="" # leave blank if using long-lived token
-HASS_TOKEN="" # leave blank if using legacy API
-HASS_SCRIPTS_PATH=""# Home assistant scripts path eg. /users/vr/.homeassistant/scripts
-HASS_GOOGLE_HOME_ENTITY="" # Home assistant google home entity_id  eg. media_player.family_room_speaker
-SONARR_SERVER="" # with port
-SONARR_API=""
-SONARR_DOWNLOAD_PATH="" # aka rootFolderPath
-SONARR_QUALITY_PROFILE_ID=4  # 1080p
-client = TVDBClient("username", "user_key", "api_key") # Username, User_Key, API_KEY
-```
-
-Test your installation
-
-```
-python3 hass_sonarr_search_by_voice.py "The Crown" "0"
-```
-
--> Step C) (Above) if you haven't allready done it.
-
-    You need to set upt in `donwload.sh` & `download_tvshows.sh` the path of you python script e.g
-
-
-
--> Step D) 8.1º
-
-
+Thank you to CyberPoison for the sonarr script and better guide.

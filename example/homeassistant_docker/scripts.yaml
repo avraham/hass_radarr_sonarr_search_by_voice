@@ -16,3 +16,9 @@ download_option:
   - service: shell_command.download_option
     data_template:
       option: '{{ option }}'
+download_tvshow:
+  alias: download_tvshow
+  sequence:
+  - service: shell_command.download_tvshow
+    data_template:
+      tvshow: '{{ tvshow }}'
