@@ -72,7 +72,7 @@ git clone THIS_REPOSITORY
 
 
 # A) How to setup
-- Set your own values in the configuration file `ha_radarr_sonarr.conf` without quotes.
+- Set your own values in the configuration file `ha_radarr_sonarr.conf` without quotes. If you are not using Radarr just leave that party blank. The same goes for Sonarr.
 
 HomeAssistant
 - **server_url**. Home assistant URL eg. localhost:8123 with port
@@ -95,8 +95,8 @@ Sonarr
 - **profile_id**. Sonarr quality profile id
 
 Services
-- **omdb_api_key**. (Optional) (recommended). Used for cast details feedback for tvshows added. http://www.omdbapi.com/apikey.aspx
-- **tmdmid_api_key_v3**. (Optional) (recommended). Used for cast details feedback for tvshows added and search movies by actor or actress. https://www.themoviedb.org/settings/api v3 auth
+- **omdb_api_key**. (Optional) (recommended for Sonarr). Used for cast details feedback for tvshows added. http://www.omdbapi.com/apikey.aspx
+- **tmdmid_api_key_v3**. (Optional) (recommended for Radarr). Used for cast details feedback for tvshows added and search movies by actor or actress. https://www.themoviedb.org/settings/api v3 auth
 
 *Note to get your HomeAssistant token go to your home assistant (http://ip_of_server:8123/) then go to Your Profile (last option on the button at the left tab) then go to  Long-Lived Access Tokens at the end of the page.*
 
