@@ -74,29 +74,29 @@ git clone THIS_REPOSITORY
 # A) How to setup
 - Set your own values in the configuration file `ha_radarr_sonarr.conf` without quotes.
 
-[HomeAssistant]
-**server_url**. Home assistant URL eg. localhost:8123 with port
-**api_key**. Home assistant legacy api password, leave blank if using long-lived token (used for voice feedback)
-**token**. Home assistant long-lived token, leave blank if using legacy API (used for voice feedback)
-**scripts_path**. Home assistant scripts path eg. /users/vr/.homeassistant/scripts or for container (e.g HA SUPERVISED) /config/scripts
-**speaker_entity**. Home assistant google home entity_id  eg. media_player.family_room_speaker
-**tts_service**. Your Home assistant text-to-speech service. eg. google_say
+HomeAssistant
+- **server_url**. Home assistant URL eg. localhost:8123 with port
+- **api_key**. Home assistant legacy api password, leave blank if using long-lived token (used for voice feedback)
+- **token**. Home assistant long-lived token, leave blank if using legacy API (used for voice feedback)
+- **scripts_path**. Home assistant scripts path eg. /users/vr/.homeassistant/scripts or for container (e.g HA SUPERVISED) /config/scripts
+- **speaker_entity**. Home assistant google home entity_id  eg. media_player.family_room_speaker
+- **tts_service**. Your Home assistant text-to-speech service. eg. google_say
 
-[Radarr]
-**server_url**. Radarr url with port (usually :7878)
-**api_key**. Radarr API Key
-**root_directory**. Radarr root_directory also knwon as rootFolderPath
-**profile_id**. Radarr quality profile id. eg. 4 is 1080p
+Radarr
+- **server_url**. Radarr url with port (usually :7878)
+- **api_key**. Radarr API Key
+- **root_directory**. Radarr root_directory also knwon as rootFolderPath
+- **profile_id**. Radarr quality profile id. eg. 4 is 1080p
 
-[Sonarr]
-**server_url**. Sonarr url with port (usually :8989)
-**api_key**. Sonarr API Key
-**root_directory**. Sonarr root_directory also knwon as rootFolderPath
-**profile_id**. Sonarr quality profile id
+Sonarr
+- **server_url**. Sonarr url with port (usually :8989)
+- **api_key**. Sonarr API Key
+- **root_directory**. Sonarr root_directory also knwon as rootFolderPath
+- **profile_id**. Sonarr quality profile id
 
-[Services]
-**omdb_api_key**. (Optional) (recommended). Used for cast details feedback for tvshows added. http://www.omdbapi.com/apikey.aspx
-**tmdmid_api_key_v3**. (Optional) (recommended). Used for cast details feedback for tvshows added and search movies by actor or actress. https://www.themoviedb.org/settings/api v3 auth
+Services
+- **omdb_api_key**. (Optional) (recommended). Used for cast details feedback for tvshows added. http://www.omdbapi.com/apikey.aspx
+- **tmdmid_api_key_v3**. (Optional) (recommended). Used for cast details feedback for tvshows added and search movies by actor or actress. https://www.themoviedb.org/settings/api v3 auth
 
 *Note to get your HomeAssistant token go to your home assistant (http://ip_of_server:8123/) then go to Your Profile (last option on the button at the left tab) then go to  Long-Lived Access Tokens at the end of the page.*
 
