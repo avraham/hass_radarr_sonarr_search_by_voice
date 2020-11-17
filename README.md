@@ -139,7 +139,7 @@ cp -r * /usr/share/hassio/homeassistant/
 * Note the destination path is only for the Home Assistant Supervised docker installation (Method Above using docker).*
 
 #####  1) Non Hassio only.
-1º Copy the content of the _example/homeassistant_ folder to your homeassistant folder. If you already have a custom yaml file for your own scripts and shell commands then just add the content of each files (_scripts.yaml_ and _shellcommand.yaml_) to your own files.
+1º Copy the content of the _example/homeassistant_ folder to your homeassistant folder. If you already have a custom yaml file for your own scripts and shell commands then just add the content of each files (_scripts.yaml_ and _shellcommand.yaml_) to your own files. Also copy the examples automations in _automations.yaml_.
 
 2º Let homeassistant know where your scripts and shell commands will be by adding the following lines to your _configuration.yaml_ (in case you are using the same file structure as me).
 
