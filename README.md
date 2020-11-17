@@ -114,7 +114,7 @@ For series go to the path of the script, make sure the give executable permissio
 
 Note. First parameter is the movie title, second parameter is the _mode_: best guess, full search; the third parameter is _what should be monitored_: `future` monitors episodes that have not aired yet and `missing` monitors all missing episodes that do not have files or have not aired yet.
 
-It should let you know if it found and added a movie (The Google Home Speaker or Echo, should speak back).
+It should let you know if it found and added a movie/tv shows (The Google Home Speaker or Echo, should speak back).
 
 # C) Integrate with Home Assistant
 
@@ -165,7 +165,7 @@ shell_command: !include shellcommand.yaml
 
  1º - Go to https://ifttt.com
 
- 2º - create a new applet
+ 2º - create a new applet. (One applet for movies and another for tv shows)
 
  3º - click on (if this) -> Google Assistant -> Say a phrase with a text ingredient (or whatever smart speaker)
 
