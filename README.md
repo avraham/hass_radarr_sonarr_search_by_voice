@@ -97,7 +97,7 @@ Sonarr
 
 Services
 - **omdb_api_key**. (Optional) (recommended for Sonarr). Used for cast details feedback for tvshows added. http://www.omdbapi.com/apikey.aspx
-- **tmdmid_api_key_v3**. (Optional) (recommended for Radarr). Used for cast details feedback for tvshows added and search movies by actor or actress. https://www.themoviedb.org/settings/api v3 auth
+- **tmdmid_api_key_v3**. (Optional) (recommended for Radarr). Used for cast details feedback for movies added and search movies by actor or actress function. https://www.themoviedb.org/settings/api v3 auth
 
 *Note to get your HomeAssistant token go to your home assistant (http://ip_of_server:8123/) then go to Your Profile (last option on the button at the left tab) then go to  Long-Lived Access Tokens at the end of the page.*
 
@@ -114,7 +114,7 @@ For series go to the path of the script, make sure the give executable permissio
 
 Note. First parameter is the movie title, second parameter is the _mode_: best guess, full search; the third parameter is _what should be monitored_: `future` monitors episodes that have not aired yet and `missing` monitors all missing episodes that do not have files or have not aired yet.
 
-It should let you know if it found and added a movie (The Google Home Speaker, should speak back).
+It should let you know if it found and added a movie (The Google Home Speaker or Echo, should speak back).
 
 # C) Integrate with Home Assistant
 
