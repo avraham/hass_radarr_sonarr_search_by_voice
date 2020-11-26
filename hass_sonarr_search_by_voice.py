@@ -160,7 +160,11 @@ class ShowDownloader:
         r = requests.post("http://"+self.SONARR_SERVER+"/api/series?apikey="+self.SONARR_API,json.dumps(data))
 
         if r.status_code == 201:
-            self.tts_google("I added the tv show "+str(data['title'])+" "+str(data['year'])+" with, "+str(data['cast'])+" to your list.")
+            if str(data['cast']) == "":
+                self.tts_google("I added the tv show "+str(data['title'])+" "+str(data['year'])+" to your list.")
+            else:
+                self.tts_google("I added the tv show "+str(data['title'])+" "+str(data['year'])+" with, "+str(data['cast'])+" to your list.")
+
             show = r.json()
             with open(self.HASS_SCRIPTS_PATH+"/last_tvshow_download_added.txt", "w") as myfile:
                 myfile.write("show:"+str(show['id'])+"\n")
@@ -170,7 +174,11 @@ class ShowDownloader:
                 if res == 0:
                     self.tts_google("I found your tv show but I was not able to add it to your list.")
                 else:
-                    self.tts_google("The tv show, "+str(data['title'])+" "+str(data['year'])+" with, "+str(data['cast'])+" is already in your list.")
+                    if str(data['cast']) == "":
+                        self.tts_google("The tv show, "+str(data['title'])+" "+str(data['year'])+" is already in your list.")
+                    else:
+                        self.tts_google("The tv show, "+str(data['title'])+" "+str(data['year'])+" with, "+str(data['cast'])+" is already in your list.")
+
             else:
                 self.tts_google("Something wrong occured when trying to add the tv show to your list.")
 
@@ -208,7 +216,10 @@ class ShowDownloader:
                     if len(cast) > 1:
                         return(cast[0]+" and"+cast[1])
                     else:
-                        return(cast[0])
+                        if cast[0] == "N/A":
+                            return("")
+                        else:
+                            return(cast[0])
                 else:
                     return("")
             else:
@@ -296,10 +307,10 @@ class ShowDownloader:
 
     def loadParameters(self):
         config=configparser.ConfigParser()
-        configFile = './ha_radarr_sonarr.conf'
+        dirname, filename = os.path.split(os.path.abspath(sys.argv[0]))
+        configFile = os.path.join(dirname, 'ha_radarr_sonarr.conf')
 
-
-        config.read('./ha_radarr_sonarr.conf')
+        config.read(configFile)
 
         self.HASS_SERVER = config.get('HomeAssistant', 'server_url')
         self.HASS_API = config.get('HomeAssistant', 'api_key')

@@ -265,10 +265,10 @@ class MovieDownloader:
 
     def loadParameters(self):
         config=configparser.ConfigParser()
-        configFile = './ha_radarr_sonarr.conf'
+        dirname, filename = os.path.split(os.path.abspath(sys.argv[0]))
+        configFile = os.path.join(dirname, 'ha_radarr_sonarr.conf')
 
-
-        config.read('./ha_radarr_sonarr.conf')
+        config.read(configFile)
 
         self.HASS_SERVER = config.get('HomeAssistant', 'server_url')
         self.HASS_API = config.get('HomeAssistant', 'api_key')
