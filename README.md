@@ -73,7 +73,8 @@ git clone THIS_REPOSITORY
 
 # A) How to setup
 - Set your own values in the configuration file `ha_radarr_sonarr.conf` without quotes.
-If you are not using Radarr just leave that part blank. The same goes for Sonarr.
+If you are not using Radarr just leave that part blank. The same goes for Sonarr. it should work even if radarr and
+sonarr are on a different host.
 
 HomeAssistant
 - **server_url**. Home assistant URL eg. http://localhost:8123 with port
@@ -86,7 +87,8 @@ HomeAssistant
 Radarr
 - **server_url**. Radarr url with protocol (http or https) and port (usually :7878)
 - **api_key**. Radarr API Key
-- **root_directory**. Radarr root_directory also knwon as rootFolderPath
+- **root_directory**. Radarr root_directory also knwon as rootFolderPath. If you are using docker, the root_directory is the virtual path your radarr
+app has access to. It the same path it shows on the UI when you add a movie manually.
 - **profile_id**. Radarr quality profile id. eg. 4 is 1080p
 
 Sonarr
