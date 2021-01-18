@@ -41,7 +41,7 @@ class ShowDownloader:
         if mode == 0 or mode == 1: # we are making a search by series title
             # search
 
-            r = requests.get("http://"+self.SONARR_SERVER+"/api/series/lookup?term="+search_term+"&apikey="+self.SONARR_API)
+            r = requests.get(self.SONARR_SERVER+"/api/series/lookup?term="+search_term+"&apikey="+self.SONARR_API)
 
             if r.status_code == requests.codes.ok:
 
@@ -99,7 +99,7 @@ class ShowDownloader:
                 if download_option > -1 and len(show) >= download_option:
                     m = show[download_option]
                     if m['profileId'] == -1 and m['tvdbId'] > 0:
-                        r = requests.get("http://"+self.SONARR_SERVER+"/api/series/lookup?term=tvdb:"+str(m['tvdbId'])+"&apikey="+self.SONARR_API)
+                        r = requests.get(self.SONARR_SERVER+"/api/series/lookup?term=tvdb:"+str(m['tvdbId'])+"&apikey="+self.SONARR_API)
                         if r.status_code == requests.codes.ok:
                             media_list = r.json()
                             # print(media_list)
@@ -157,7 +157,7 @@ class ShowDownloader:
         return data
 
     def add_show(self, data):
-        r = requests.post("http://"+self.SONARR_SERVER+"/api/series?apikey="+self.SONARR_API,json.dumps(data))
+        r = requests.post(self.SONARR_SERVER+"/api/series?apikey="+self.SONARR_API,json.dumps(data))
 
         if r.status_code == 201:
             if str(data['cast']) == "":
@@ -184,7 +184,7 @@ class ShowDownloader:
 
     def is_show_already_added(self, data):
         # print("http://"+self.SONARR_SERVER+"/api/movie?apikey="+self.SONARR_API)
-        r = requests.get("http://"+self.SONARR_SERVER+"/api/series?apikey="+self.SONARR_API)
+        r = requests.get(self.SONARR_SERVER+"/api/series?apikey="+self.SONARR_API)
 
         found = False
         # print(data['tvdbId'])
@@ -293,10 +293,10 @@ class ShowDownloader:
             headers = {
                 'Authorization': 'Bearer '+self.HASS_TOKEN
             }
-            r = requests.post("http://"+self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE,json.dumps(data), headers=headers)
+            r = requests.post(self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE,json.dumps(data), headers=headers)
 
         else:
-            r = requests.post("http://"+self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE+"?api_password="+self.HASS_API,json.dumps(data))
+            r = requests.post(self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE+"?api_password="+self.HASS_API,json.dumps(data))
 
 
         # assistant-relay

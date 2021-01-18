@@ -34,7 +34,7 @@ class MovieDownloader:
         if mode == 0 or mode == 1: # we are making a search by movie title
             # search
 
-            r = requests.get("http://"+self.RADARR_SERVER+"/api/movie/lookup?apikey="+self.RADARR_API+"&term="+search_term)
+            r = requests.get(self.RADARR_SERVER+"/api/movie/lookup?apikey="+self.RADARR_API+"&term="+search_term)
 
             if r.status_code == requests.codes.ok:
 
@@ -92,7 +92,7 @@ class MovieDownloader:
                 if download_option > -1 and len(movies) >= download_option:
                     m = movies[download_option]
                     if m['qualityProfileId'] == -1 and m['tmdbId'] > 0:
-                        r = requests.get("http://"+self.RADARR_SERVER+"/api/movie/lookup/tmdb?apikey="+self.RADARR_API+"&tmdbId="+str(m['tmdbId']))
+                        r = requests.get(self.RADARR_SERVER+"/api/movie/lookup/tmdb?apikey="+self.RADARR_API+"&tmdbId="+str(m['tmdbId']))
                         if r.status_code == requests.codes.ok:
                             media_list = r.json()
                             # print(media_list)
@@ -136,7 +136,7 @@ class MovieDownloader:
         return data
 
     def add_movie(self, data):
-        r = requests.post("http://"+self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API,json.dumps(data))
+        r = requests.post(self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API,json.dumps(data))
 
         if r.status_code == 201:
             if str(data['cast']) == "":
@@ -161,7 +161,7 @@ class MovieDownloader:
 
     def is_movie_already_added(self, data):
         # print("http://"+self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
-        r = requests.get("http://"+self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
+        r = requests.get(self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
 
         found = False
         # print(data['tmdbId'])
@@ -251,10 +251,10 @@ class MovieDownloader:
             headers = {
                 'Authorization': 'Bearer '+self.HASS_TOKEN
             }
-            r = requests.post("http://"+self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE,json.dumps(data), headers=headers)
+            r = requests.post(self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE,json.dumps(data), headers=headers)
 
         else:
-            r = requests.post("http://"+self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE+"?api_password="+self.HASS_API,json.dumps(data))
+            r = requests.post(self.HASS_SERVER+"/api/services/tts/"+self.HASS_TTS_SERVICE+"?api_password="+self.HASS_API,json.dumps(data))
 
 
         # assistant-relay

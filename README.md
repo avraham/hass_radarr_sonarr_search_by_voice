@@ -76,7 +76,7 @@ git clone THIS_REPOSITORY
 If you are not using Radarr just leave that part blank. The same goes for Sonarr.
 
 HomeAssistant
-- **server_url**. Home assistant URL eg. localhost:8123 with port
+- **server_url**. Home assistant URL eg. http://localhost:8123 with port
 - **api_key**. Home assistant legacy api password, leave blank if using long-lived token (used for voice feedback)
 - **token**. Home assistant long-lived token, leave blank if using legacy API (used for voice feedback)
 - **scripts_path**. Home assistant scripts path eg. /users/vr/.homeassistant/scripts or for container (e.g HA SUPERVISED) /config/scripts
@@ -84,13 +84,13 @@ HomeAssistant
 - **tts_service**. Your Home assistant text-to-speech service. eg. google_say
 
 Radarr
-- **server_url**. Radarr url with port (usually :7878)
+- **server_url**. Radarr url with protocol (http or https) and port (usually :7878)
 - **api_key**. Radarr API Key
 - **root_directory**. Radarr root_directory also knwon as rootFolderPath
 - **profile_id**. Radarr quality profile id. eg. 4 is 1080p
 
 Sonarr
-- **server_url**. Sonarr url with port (usually :8989)
+- **server_url**. Sonarr url with protocol (http or https) and port (usually :8989)
 - **api_key**. Sonarr API Key
 - **root_directory**. Sonarr root_directory also knwon as rootFolderPath
 - **profile_id**. Sonarr quality profile id
