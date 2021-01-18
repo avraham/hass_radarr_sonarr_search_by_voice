@@ -8,8 +8,8 @@ Add movies and tv shows to radarr and sonarr by voice with Home Assistant and a 
 - Sonarr
 - Smart speaker (Google Home, Echo, etc)
 - IFTTT Account
-- https://www.themoviedb.org API Key (Optional)
-- http://www.omdbapi.com/ API Key (Optional)
+- https://www.themoviedb.org API Key (Optional) (Free)
+- http://www.omdbapi.com/ API Key (Optional) (Free)
 
 # Features
 Add movies to radarr and tv shows to sonarr by asking your smart speaker to do it. You can set it up only for radarr, only for sonarr or both.
@@ -88,7 +88,7 @@ Radarr
 - **server_url**. Radarr url with protocol (http or https) and port (usually :7878)
 - **api_key**. Radarr API Key
 - **root_directory**. Radarr root_directory also knwon as rootFolderPath. If you are using docker, the root_directory is the virtual path your radarr
-app has access to. It the same path it shows on the UI when you add a movie manually.
+app has access to. It's the same path it shows on the UI when you add a movie manually.
 - **profile_id**. Radarr quality profile id. eg. 4 is 1080p
 
 Sonarr
