@@ -89,7 +89,7 @@ Radarr
 - **api_key**. Radarr API Key
 - **root_directory**. Radarr root_directory also knwon as rootFolderPath. If you are using docker, the root_directory is the virtual path your radarr
 app has access to. It's the same path it shows on the UI when you add a movie manually.
-- **profile_id**. Radarr quality profile id. eg. 4 is 1080p
+- **profile_id**. Radarr quality profile id. eg. 4 is 1080p. [How to choose a profile_id value?](https://github.com/avraham/hass_radarr_sonarr_search_by_voice/wiki)
 
 Sonarr
 - **server_url**. Sonarr url with protocol (http or https) and port (usually :8989)
