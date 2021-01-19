@@ -77,7 +77,7 @@ If you are not using Radarr just leave that part blank. The same goes for Sonarr
 sonarr are on a different host.
 
 HomeAssistant
-- **server_url**. Home assistant URL eg. http://localhost:8123 with port
+- **server_url**. Home assistant URL eg. http://localhost:8123 with protocol (http or https) and port
 - **api_key**. Home assistant legacy api password, leave blank if using long-lived token (used for voice feedback)
 - **token**. Home assistant long-lived token, leave blank if using legacy API (used for voice feedback)
 - **scripts_path**. Home assistant scripts path eg. /users/vr/.homeassistant/scripts or for container (e.g HA SUPERVISED) /config/scripts
