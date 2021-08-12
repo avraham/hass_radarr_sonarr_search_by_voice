@@ -220,3 +220,7 @@ Shell script for homeassistant that will call the python script.
 Bonus shell script for removing the last movie added to radarr by this script.
 
 Thank you to CyberPoison for the sonarr script and better guide.
+
+### Did you find this useful and would like to support my work?
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/avraham.vr)
+
