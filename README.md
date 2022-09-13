@@ -222,5 +222,4 @@ Bonus shell script for removing the last movie added to radarr by this script.
 Thank you to CyberPoison for the sonarr script and better guide.
 
 ### Did you find this useful and would like to support my work?
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/avraham.vr)
-
+<a href="https://paypal.me/avrahamvr/"><img src="https://github.com/andreostrovsky/donate-with-paypal/blob/master/blue.svg" height="40"></a> 
