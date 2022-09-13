@@ -69,40 +69,53 @@ class MovieDownloader:
                         msg = self.save_options_found_and_compose_msg(movies)
                         self.tts_google(msg)
 
-
-        elif mode == 3 and self.TMDBID_API_V3:  # search latest movies by Actor/Actress and offers 5 options to choose from.
-            actor_id = self.get_actor_id(search_term)
-            if actor_id > 0:
-                movies = []
-                movies = self.get_actors_latest_movies(actor_id, year)
-                if len(movies) > 0:
-                    msg = self.save_options_found_and_compose_msg(movies)
-                    self.tts_google(msg)
                 else:
-                    self.tts_google("No movies were found.")
+                    print("Your radarr setup seems fine, but it didn't found a result.")
+
             else:
-                self.tts_google("No actor or actress was found.")
+                print("Radarr didn't respond. Please check your conf file setup, such as server_url and api_key fo Radarr.")
+
+
+        elif mode == 3:
+            if self.TMDBID_API_V3 and "http" not in self.TMDBID_API_V3: # search latest movies by Actor/Actress and offers 5 options to choose from.
+                actor_id = self.get_actor_id(search_term)
+                if actor_id > 0:
+                    movies = []
+                    movies = self.get_actors_latest_movies(actor_id, year)
+                    if len(movies) > 0:
+                        msg = self.save_options_found_and_compose_msg(movies)
+                        self.tts_google(msg)
+                    else:
+                        self.tts_google("No movies were found.")
+                else:
+                    self.tts_google("No actor or actress was found.")
+            else:
+                self.tts_google("It looks like you haven't setup you api key (v3 auth) for TMDBID. To get one go to https://www.themoviedb.org/settings/api")
         else:
             # add to downloads from download_options file
-            download_option = int(movie)-1
-            data = {}
+            try:
+                download_option = int(movie)-1
+                data = {}
 
-            with open(self.HASS_SCRIPTS_PATH+'/download_options.txt') as json_data:
-                movies = json.load(json_data)
-                if download_option > -1 and len(movies) >= download_option:
-                    m = movies[download_option]
-                    if m['qualityProfileId'] == -1 and m['tmdbId'] > 0:
-                        r = requests.get(self.RADARR_SERVER+"/api/movie/lookup/tmdb?apikey="+self.RADARR_API+"&tmdbId="+str(m['tmdbId']))
-                        if r.status_code == requests.codes.ok:
-                            media_list = r.json()
-                            # print(media_list)
-                            # if len(media_list) > 0:
-                            data = self.prepare_movie_json(media_list)
+                with open(self.HASS_SCRIPTS_PATH+'/download_options.txt') as json_data:
+                    movies = json.load(json_data)
+                    if download_option > -1 and len(movies) >= download_option:
+                        m = movies[download_option]
+                        if m['qualityProfileId'] == -1 and m['tmdbId'] > 0:
+                            r = requests.get(self.RADARR_SERVER+"/api/movie/lookup/tmdb?apikey="+self.RADARR_API+"&tmdbId="+str(m['tmdbId']))
+                            if r.status_code == requests.codes.ok:
+                                media_list = r.json()
+                                # print(media_list)
+                                # if len(media_list) > 0:
+                                data = self.prepare_movie_json(media_list)
+                        else:
+                            data = self.prepare_movie_json(m)
+                        self.add_movie(data)
                     else:
-                        data = self.prepare_movie_json(m)
-                    self.add_movie(data)
-                else:
-                    self.tts_google("There's no such option.")
+                        self.tts_google("There's no such option.")
+            except ValueError:
+                self.tts_google("Sorry. That was not a valid option.")
+
 
 
     def prepare_movie_json(self, media):
