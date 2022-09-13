@@ -4,6 +4,22 @@ import json
 import sys
 import os
 import configparser
+import argparse
+import logging
+
+parser = argparse.ArgumentParser()
+parser.add_argument("query", help="Term to search",
+                    type=str)
+parser.add_argument("mode", help="Running mode. 0=Add best match. 1=Full search. 2=Add numeric option. 3=Search by actor",
+                    type=str)
+parser.add_argument(
+    '-d', '--debug',
+    help="Print lots of debugging statements",
+    action="store_const", dest="loglevel", const=logging.DEBUG,
+    default=logging.WARNING,
+)
+args = parser.parse_args()
+logging.basicConfig(level=args.loglevel)
 
 class MovieDownloader:
 
@@ -33,7 +49,7 @@ class MovieDownloader:
 
         if mode == 0 or mode == 1: # we are making a search by movie title
             # search
-
+            logging.debug("Searching movie: "+movie+" in the last 50 years and upcoming realeases.")
             r = requests.get(self.RADARR_SERVER+"/api/movie/lookup?apikey="+self.RADARR_API+"&term="+search_term)
 
             if r.status_code == requests.codes.ok:
@@ -45,6 +61,7 @@ class MovieDownloader:
                     if mode == 0: # download best guess
                         # add first occurrence to downloads
                         # we search for newish movies (recent and upcoming movies only)
+                        logging.debug("Mode 0: Automatically adding best match.")
                         i = 0
                         found = False
                         while i < len(media_list) and found == False:
@@ -60,6 +77,7 @@ class MovieDownloader:
 
                     elif mode == 1: # search movie and give 3 options
                         # add to download_options file and read them out loud
+                        logging.debug("Mode 1: Making a search and providing 3 best options found.")
                         i = 0
                         movies = []
                         while i < len(media_list) and i < 3:
@@ -70,13 +88,14 @@ class MovieDownloader:
                         self.tts_google(msg)
 
                 else:
-                    print("Your radarr setup seems fine, but it didn't found a result.")
+                    logging.debug("Your radarr setup seems fine, but it didn't found a result.")
 
             else:
-                print("Radarr didn't respond. Please check your conf file setup, such as server_url and api_key fo Radarr.")
+                logging.debug("Radarr didn't respond. Please check your conf file setup, such as server_url and api_key fo Radarr.")
 
 
         elif mode == 3:
+            logging.debug("Mode 3: Making a search by Actor: "+term+" and providing 3 best options found.")
             if self.TMDBID_API_V3 and "http" not in self.TMDBID_API_V3: # search latest movies by Actor/Actress and offers 5 options to choose from.
                 actor_id = self.get_actor_id(search_term)
                 if actor_id > 0:
@@ -90,10 +109,11 @@ class MovieDownloader:
                 else:
                     self.tts_google("No actor or actress was found.")
             else:
-                self.tts_google("It looks like you haven't setup you api key (v3 auth) for TMDBID. To get one go to https://www.themoviedb.org/settings/api")
+                logging.error("It looks like you haven't setup you api key (v3 auth) for TMDBID. To get one go to https://www.themoviedb.org/settings/api")
         else:
             # add to downloads from download_options file
             try:
+                logging.debug("Mode 2: Adding numeric option from previous search in mode 1 or 3")
                 download_option = int(movie)-1
                 data = {}
 
@@ -114,7 +134,7 @@ class MovieDownloader:
                     else:
                         self.tts_google("There's no such option.")
             except ValueError:
-                self.tts_google("Sorry. That was not a valid option.")
+                logging.error("Sorry. That was not a valid option. It needs to be a number.")
 
 
 
@@ -150,6 +170,8 @@ class MovieDownloader:
 
     def add_movie(self, data):
         r = requests.post(self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API,json.dumps(data))
+        logging.debug("Trying to add movie...")
+        logging.debug("Radarr response is: r.status_code="+str(r.status_code))
 
         if r.status_code == 201:
             if str(data['cast']) == "":
@@ -160,6 +182,7 @@ class MovieDownloader:
             with open(self.HASS_SCRIPTS_PATH+"/last_download_added.txt", "w") as myfile:
                 myfile.write("movie:"+str(movie['id'])+"\n")
         else:
+            logging.debug("movie wasn't added")
             res = self.is_movie_already_added(data)
             if res >= 0:
                 if res == 0:
@@ -170,11 +193,13 @@ class MovieDownloader:
                     else:
                         self.tts_google("The movie "+str(data['title'])+" with "+str(data['cast'])+" is already on your list.")
             else:
-                self.tts_google("Something went wrong when adding the movie.")
+                self.tts_google("Something went wrong when adding the movie. Please try again.")
 
     def is_movie_already_added(self, data):
         # print("http://"+self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
         r = requests.get(self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
+        logging.debug("Checking if movie with tmdbId: "+str(data['tmdbId'])+" already exists on Radarr...")
+        logging.debug("Radarr response is: r.status_code="+str(r.status_code))
 
         found = False
         # print(data['tmdbId'])
@@ -183,6 +208,7 @@ class MovieDownloader:
             media_list = r.json()
             # print(media_list)
             if len(media_list) > 0:
+                logging.debug("Searching a match in "+str(len(media_list))+" movies on Radarr...")
                 i = 0
                 while i < len(media_list) and found == False:
                     tmdbId = media_list[i]['tmdbId']
@@ -194,6 +220,7 @@ class MovieDownloader:
             return 1 if found == True else 0
 
         else:
+            logging.error("Error while checking if movie already exists. r.status_code="+str(r.status_code))
             return -1
 
     def get_cast(self, tmdbId):
@@ -350,16 +377,16 @@ class MovieDownloader:
             exit(1)
 
 
-query = sys.argv[1]
-mode = sys.argv[2]
+# query = sys.argv[1]
+# mode = sys.argv[2]
 
 # full_search = sys.argv[2]
 # downloading_from_file = sys.argv[3]
 # download_option = int(sys.argv[4])-1
 
-print(query)
-print(mode)
+# print(query)
+# print(mode)
 # print(downloading_from_file)
 # print(download_option)
 
-downloader = MovieDownloader(query, int(mode))
+downloader = MovieDownloader(args.query, int(args.mode))
