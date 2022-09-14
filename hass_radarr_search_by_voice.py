@@ -21,6 +21,9 @@ parser.add_argument(
 args = parser.parse_args()
 logging.basicConfig(level=args.loglevel)
 
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 class MovieDownloader:
 
 
@@ -68,6 +71,7 @@ class MovieDownloader:
                             year = media_list[i]['year']
                             if year in current_years:
                                 found = True
+                                logging.debug("movie "+media_list[i]['title']+" found")
                                 data = self.prepare_movie_json(media_list[i])
                                 self.add_movie(data)
                                 break;
@@ -171,9 +175,10 @@ class MovieDownloader:
     def add_movie(self, data):
         r = requests.post(self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API,json.dumps(data))
         logging.debug("Trying to add movie...")
-        logging.debug("Radarr response is: r.status_code="+str(r.status_code))
+
 
         if r.status_code == 201:
+
             if str(data['cast']) == "":
                 self.tts_google("I added the movie "+str(data['title'])+" to your list.")
             else:
@@ -182,11 +187,16 @@ class MovieDownloader:
             with open(self.HASS_SCRIPTS_PATH+"/last_download_added.txt", "w") as myfile:
                 myfile.write("movie:"+str(movie['id'])+"\n")
         else:
-            logging.debug("movie wasn't added")
+            logging.debug("movie wasn't added. r.status_code:"+str(r.status_code))
+            logging.debug("This was the failed request. You can manually try it using curl to test it.")
+            logging.debug(self.curlify_request(r))
+
+
             res = self.is_movie_already_added(data)
             if res >= 0:
                 if res == 0:
-                    self.tts_google("I found a movie, but I wasn't able to add it.")
+                    logging.debug("the movie wasn't found on your Raddar list either.")
+                    self.tts_google("I wasn't able to add the movie.")
                 else:
                     if str(data['cast']) == "":
                         self.tts_google("The movie "+str(data['title'])+" is already on your list.")
@@ -199,16 +209,17 @@ class MovieDownloader:
         # print("http://"+self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
         r = requests.get(self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
         logging.debug("Checking if movie with tmdbId: "+str(data['tmdbId'])+" already exists on Radarr...")
-        logging.debug("Radarr response is: r.status_code="+str(r.status_code))
+
 
         found = False
         # print(data['tmdbId'])
         # print(r.status_code)
         if r.status_code == 200:
+            logging.debug("Radarr list retreived")
             media_list = r.json()
             # print(media_list)
             if len(media_list) > 0:
-                logging.debug("Searching a match in "+str(len(media_list))+" movies on Radarr...")
+                logging.debug("Searching a match in "+str(len(media_list))+" movies already on Radarr...")
                 i = 0
                 while i < len(media_list) and found == False:
                     tmdbId = media_list[i]['tmdbId']
@@ -221,10 +232,13 @@ class MovieDownloader:
 
         else:
             logging.error("Error while checking if movie already exists. r.status_code="+str(r.status_code))
+            logging.debug("This was the failed request. You can manually try it using curl to test it.")
+            logging.debug(self.curlify_request(r))
             return -1
 
     def get_cast(self, tmdbId):
         if self.TMDBID_API_V3:
+            logging.debug("Getting movie cast...")
             r = requests.get("https://api.themoviedb.org/3/movie/"+str(tmdbId)+"/credits?api_key="+self.TMDBID_API_V3)
             if r.status_code == requests.codes.ok:
                 movie = r.json()
@@ -234,6 +248,7 @@ class MovieDownloader:
                 else:
                     return(cast[0]['name'])
             else:
+                logging.debug("Getting cast request failed.")
                 return("")
 
 
@@ -301,6 +316,17 @@ class MovieDownloader:
         # command_data = {"command": msg}
         # r = requests.post("http://"+self.HASS_SERVER+"/api/services/rest_command/gh_broadcast?api_password="+self.HASS_API,json.dumps(command_data))
         print(msg)
+
+    def curlify_request(self, r):
+        req = r.request
+
+        command = "curl --compressed -X {method} -H {headers} -d '{data}' '{uri}'"
+        method = req.method
+        uri = req.url
+        data = req.body
+        headers = ['"{0}: {1}"'.format(k, v) for k, v in req.headers.items()]
+        headers = " -H ".join(headers)
+        return command.format(method=method, headers=headers, data=data, uri=uri)
 
 
     def loadParameters(self):
