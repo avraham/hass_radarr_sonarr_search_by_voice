@@ -4,7 +4,7 @@ Add movies and tv shows to radarr and sonarr by voice with Home Assistant and a 
 
 # Requirements
 - Home Assistant
-- Radarr
+- Radarr v3 or newer
 - Sonarr
 - Smart speaker (Google Home, Echo, etc)
 - IFTTT Account
@@ -107,9 +107,9 @@ Services
 
 # B) How to test from command line
 For movies go to the path of the script, make sure the give executable permissions and run:
-```python3 ./hass_radarr_search_by_voice.py "Artemis Fowl" "0"```
+```python3 ./hass_radarr_search_by_voice.py "Artemis Fowl" "0"  --debug```
 
-Note. First parameter is the movie title, second parameter is the _mode_: best guess, full search, search by actor.
+Note. First parameter is the movie title, second parameter is the _mode_: See Features section for more information.
 
 For series go to the path of the script, make sure the give executable permissions and run:
 ```python3 ./hass_sonarr_search_by_voice.py "The Mandalorian" "0" "future"```
