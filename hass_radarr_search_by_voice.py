@@ -42,6 +42,13 @@ class MovieDownloader:
 
         self.loadParameters()
 
+        self.headers = {
+            'Content-type':'application/json',
+            'Accept':'application/json',
+            'X-Api-Key': self.RADARR_API
+        }
+        self.baseUrl = "/api/v3/movie"
+
         year = datetime.datetime.now().year
         term = movie
         search_term = term.replace(" ", "%20")
@@ -53,7 +60,7 @@ class MovieDownloader:
         if mode == 0 or mode == 1: # we are making a search by movie title
             # search
             logging.debug("Searching movie: "+movie+" in the last 50 years and upcoming realeases.")
-            r = requests.get(self.RADARR_SERVER+"/api/movie/lookup?apikey="+self.RADARR_API+"&term="+search_term)
+            r = requests.get(self.RADARR_SERVER+self.baseUrl+"/lookup?term="+search_term, headers=self.headers)
 
             if r.status_code == requests.codes.ok:
 
@@ -126,7 +133,7 @@ class MovieDownloader:
                     if download_option > -1 and len(movies) >= download_option:
                         m = movies[download_option]
                         if m['qualityProfileId'] == -1 and m['tmdbId'] > 0:
-                            r = requests.get(self.RADARR_SERVER+"/api/movie/lookup/tmdb?apikey="+self.RADARR_API+"&tmdbId="+str(m['tmdbId']))
+                            r = requests.get(self.RADARR_SERVER+self.baseUrl+"/lookup/tmdb?tmdbId="+str(m['tmdbId']), headers=self.headers)
                             if r.status_code == requests.codes.ok:
                                 media_list = r.json()
                                 # print(media_list)
@@ -173,7 +180,7 @@ class MovieDownloader:
         return data
 
     def add_movie(self, data):
-        r = requests.post(self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API,json.dumps(data))
+        r = requests.post(self.RADARR_SERVER+self.baseUrl,json.dumps(data), headers=self.headers)
         logging.debug("Trying to add movie...")
 
 
@@ -207,7 +214,7 @@ class MovieDownloader:
 
     def is_movie_already_added(self, data):
         # print("http://"+self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
-        r = requests.get(self.RADARR_SERVER+"/api/movie?apikey="+self.RADARR_API)
+        r = requests.get(self.RADARR_SERVER+self.baseUrl, headers=self.headers)
         logging.debug("Checking if movie with tmdbId: "+str(data['tmdbId'])+" already exists on Radarr...")
 
 
