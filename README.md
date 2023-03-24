@@ -1,3 +1,5 @@
+As of August 31, 2022 the Google Assistant service on IFTTT doesn't support text ingredients for the Google Assistant service anymore. Until an alternative is found, this can't be activated with Home Assistant via Google speaker.
+
 # hass_radarr_sonarr_search_by_voice
 Add movies and tv shows to radarr and sonarr by voice with Home Assistant and a smart speaker (Google Home, Echo) and receive voice feedback.
 
