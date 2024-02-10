@@ -1,3 +1,9 @@
+This project migrated to
+[https://github.com/avraham/hass_radarr_actions](https://github.com/avraham/hass_radarr_actions)
+
+-----
+
+
 As of August 31, 2022 the Google Assistant service on IFTTT doesn't support text ingredients for the Google Assistant service anymore. Until an alternative is found, this can't be activated with Home Assistant via Google speaker.
 
 # hass_radarr_sonarr_search_by_voice
